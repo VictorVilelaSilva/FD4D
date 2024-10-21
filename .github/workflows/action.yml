@@ -38,7 +38,11 @@ jobs:
           pip install pyinstaller
 
       - name: Build with pyinstaller for ${{ matrix.config.os }}
-        run: pyinstaller main.spec
+        uses: knicknic/os-specific-run@v1.0.3
+        with:
+          macos: pyinstaller main.py --onefile --noconsole --name FD4D --icon="./assets/Images/Logo.icns" --add-data "./assets:./assets"
+          linux: pyinstaller main.py --onefile --noconsole --name FD4D --icon="./assets/Images/Logo.ico" --add-data "./assets:./assets"
+          windows: pyinstaller main.py --onefile --noconsole --name FD4D --icon="./assets/Images/Logo.ico" --add-data "./assets;./assets"
 
       - name: Rename builded app
         run: mv ./dist ./dist-${{ matrix.config.os }}
