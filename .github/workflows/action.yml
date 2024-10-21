@@ -51,38 +51,42 @@ jobs:
       - name: Upload result job ${{ matrix.config.os }}
         uses: actions/upload-artifact@v4
         with:
-          name: FD4D-pyinstaller-artifact
+          name: FD4D-pyinstaller-artifact-${{ matrix.config.os }}
           path: ./dist*
           
-  release:
-    name: Release
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: FD4D-pyinstaller-artifact
+release:
+  name: Release
+  runs-on: ubuntu-latest
+  needs: build
+  strategy:
+    matrix:
+      os: [ubuntu-22.04, macos-latest, windows-2022]  
+  steps:
+    - name: Download artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: tradutor-pyinstaller-artifact-${{ matrix.os }}
 
-      - name: Zip file windows
-        run: zip -r FD4D_windows.zip dist-windows-*
+    - name: Zip file
+      run: |
+        if [ "${{ matrix.os }}" == "windows-2022" ]; then
+          zip -r tradutor_windows.zip dist-windows-*
+        elif [ "${{ matrix.os }}" == "ubuntu-22.04" ]; then
+          zip -r tradutor_ubuntu.zip dist-ubuntu-*
+        else
+          zip -r tradutor_macos.zip dist-macos-*
+        fi
 
-      - name: Zip file ubuntu
-        run: zip -r FD4D_ubuntu.zip dist-ubuntu-*
-
-      - name: Zip file macos
-        run: zip -r FD4D_macos.zip dist-macos-*
-
-      - name: Create Release
-        id: create_release
-        uses: softprops/action-gh-release@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          draft: false
-          prerelease: false
-          files: |
-            FD4D_windows.zip
-            FD4D_ubuntu.zip
-            FD4D_macos.zip
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v2
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        draft: false
+        prerelease: false
+        files: |
+          FD4D_windows.zip
+          FD4D_ubuntu.zip
+          FD4D_macos.zip
