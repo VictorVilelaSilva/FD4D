@@ -79,13 +79,13 @@ jobs:
           path: dist-windows-2022
 
       - name: Zip file windows
-        run: zip -r FD4D_windows.zip dist-windows-2022
+        run: cd dist-windows-2022 && zip -r ../FD4D_windows.zip .
 
       - name: Zip file ubuntu
-        run: zip -r FD4D_ubuntu.zip dist-ubuntu-22.04
+        run: cd dist-ubuntu-22.04 && zip -r ../FD4D_ubuntu.zip .
 
       - name: Zip file macos
-        run: zip -r FD4D_macos.zip dist-macos-latest
+        run: cd dist-macos-latest && zip -r ../FD4D_macos.zip .
 
       - name: Create Release
         id: create_release
