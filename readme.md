@@ -16,7 +16,7 @@ Este projeto foi desenvolvido com o intuito de facilitar a vida de quem trabalha
 - PIL - Para capturar a cor do pixel onde o mouse está
 
 ## Download
-Abaixo voce consegue fazer o dowload para do executavel para os principais sistemas operacionais:
+Abaixo estão os links para download dos executáveis para cada sistema operacional:
 
 - [Windows](https://github.com/VictorVilelaSilva/FD4D/releases/download/2.0.0/FD4D_windows.zip)
 - [Linux](https://github.com/VictorVilelaSilva/FD4D/releases/download/2.0.0/FD4D_ubuntu.zip)
