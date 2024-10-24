@@ -1,7 +1,6 @@
 
 import pyautogui
 
-
 def get_mouse_hex_color()->str:
     """Retorna a cor HEX do pixel sob o mouse, considerando múltiplos monitores."""
     x,y = pyautogui.position()

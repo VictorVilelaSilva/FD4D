@@ -1,18 +1,19 @@
 import os
+from turtle import width
 from assets.functions.ColorPickFuntions import (
     get_mouse_hex_color,
     hex_to_rgb,
     rgb_to_cmyk,
 )
 from assets.functions.GeneratorFunctions import generate_cnpj, generate_cpf, generate_rg
-from assets.constants.Constants import BACKGROUND_COLOR, HEIGHT_ROOT, WIDTH_ROOT
+from assets.constants.Constants import BACKGROUND_COLOR, HEIGHT_ROOT_LINUX, HEIGHT_ROOT_WINDOWS, WIDTH_ROOT_LINUX, WIDTH_ROOT_WINDOWS
 from PIL import Image, ImageTk
 from assets.functions.tools import local_path
 from pathlib import Path
 import tkinter as tk
 import pyperclip
 import threading
-import keyboard
+from pynput import keyboard
 import uuid
 import time
 
@@ -60,15 +61,14 @@ class MainWindow:
             self.colorTextCmyk.config(text=f"{self.cmykColor}")
             time.sleep(0.05)
 
-    def __init__(self, root):
+    def __init__(self, root, width, height):
         self.mask = False
         containersSize = {
-            "width": (WIDTH_ROOT / 2) - 2,
-            "height": HEIGHT_ROOT,
+            "width": (width / 2) - 2,
+            "height": height,
         }
         image_path = base_path / Path("assets/Images/Logo.png")
 
-        root.geometry("{0}x{1}".format(WIDTH_ROOT, HEIGHT_ROOT))
         root.configure(bg=BACKGROUND_COLOR)
         root.title("FD4D")
 
@@ -79,7 +79,7 @@ class MainWindow:
             background=BACKGROUND_COLOR,
             border=1,
             relief="flat",
-            width=WIDTH_ROOT,
+            width=width,
             height=100,
         )
         self.image = Image.open(image_path)
@@ -232,16 +232,19 @@ class MainWindow:
         )
         self.colorTextCmyk.pack(side="left", padx=1)
         # endregion
-
         # region Hotkeys
-        keyboard.add_hotkey("ctrl+1", self.get_cpf)
-        keyboard.add_hotkey("ctrl+2", self.get_cnpj)
-        keyboard.add_hotkey("ctrl+3", self.get_rg)
-        keyboard.add_hotkey("ctrl+4", self.get_uuid)
-        keyboard.add_hotkey("ctrl+*", self.toggle_mask)
-        keyboard.add_hotkey("ctrl+alt+h", lambda: pyperclip.copy(self.hexColor))
-        keyboard.add_hotkey("ctrl+alt+r", lambda: pyperclip.copy(self.rgbColor))
-        keyboard.add_hotkey("ctrl+alt+c", lambda: pyperclip.copy(self.cmykColor))
+        listener = keyboard.GlobalHotKeys({
+            '<ctrl>+1': self.get_rg,
+            '<ctrl>+2': self.get_cpf,
+            '<ctrl>+3': self.get_cnpj,
+            '<ctrl>+4': self.get_uuid,
+            '<ctrl>+*': self.toggle_mask,
+            '<ctrl>+<alt>+h': lambda: pyperclip.copy(self.hexColor),
+            '<ctrl>+<alt>+r': lambda: pyperclip.copy(self.rgbColor),
+            '<ctrl>+<alt>+c': lambda: pyperclip.copy(self.cmykColor),
+
+        })
+        listener.start()
         # endregion
 
         thread = threading.Thread(target=self.get_color_mouse)
@@ -253,12 +256,14 @@ if __name__ == "__main__":
     root = tk.Tk()
     root.title("FD4D")
     sistema_operacional = os.name
+    width = WIDTH_ROOT_LINUX if sistema_operacional == "posix" else WIDTH_ROOT_WINDOWS
+    height = HEIGHT_ROOT_LINUX if sistema_operacional == "posix" else HEIGHT_ROOT_WINDOWS
+    root.geometry("{0}x{1}".format(width, height))
     if sistema_operacional == "posix":
         root.iconphoto(True, tk.PhotoImage("assets/Images/Logo.png"))
-
     elif sistema_operacional == "nt":
         root.iconbitmap(base_path / Path("assets/Images/Logo.ico"))
     root.resizable(False, False)
 
-    generator = MainWindow(root)
+    generator = MainWindow(root, width, height)
     root.mainloop()
