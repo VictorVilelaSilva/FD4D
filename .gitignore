@@ -1,5 +1,6 @@
 .vscode
 build
 dist
-venv
-.pyc
+.venv
+*.pyc
+teste.py
