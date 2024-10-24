@@ -2,5 +2,6 @@
 build
 dist
 .venv
-*.pyc
 teste.py
+*.pyc
+assets/functions/__pycache__/*
