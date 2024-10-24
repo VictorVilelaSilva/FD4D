@@ -18,9 +18,8 @@ Este projeto foi desenvolvido com o intuito de facilitar a vida de quem trabalha
 ## Download
 Abaixo estão os links para download dos executáveis para cada sistema operacional:
 
-- [Windows](https://github.com/VictorVilelaSilva/FD4D/releases/download/2.0.1/FD4D_windows.zip)
-- [Linux](https://github.com/VictorVilelaSilva/FD4D/releases/download/2.0.1/FD4D_ubuntu.zip)
-- [MacOS](https://github.com/VictorVilelaSilva/FD4D/releases/download/2.0.1/FD4D_macos.zip)
+- [Windows](https://github.com/VictorVilelaSilva/FD4D/releases/download/2.0.2/FD4D_windows.zip)
+- [Linux](https://github.com/VictorVilelaSilva/FD4D/releases/download/2.0.2/FD4D_ubuntu.zip)
 
 > [!NOTE]
 > So consegui testar o exeutavel para windows, então se tiver algum problema com os outros sistemas operacionais por favor abrir uma issue para que eu possa corrigir.
@@ -30,9 +29,9 @@ Abaixo estão os links para download dos executáveis para cada sistema operacio
 
 
 ### Atalhos disponíveis
-- **ctrl+1**: Gera um CPF válido.
-- **ctrl+2**: Gera um CNPJ válido.
-- **ctrl+3**: Gera um RG válido.
+- **ctrl+1**: Gera um RG válido.
+- **ctrl+2**: Gera um CPF válido.
+- **ctrl+3**: Gera um CNPJ válido.
 - **ctrl+4**: Gera um UUID.
 - **ctrl+***: Alterna entre máscara de CPF e CNPJ.
 - **ctrl+alt+h**: Copia a cor hexadecimal para a área de transferência.

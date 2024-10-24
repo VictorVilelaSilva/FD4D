@@ -14,7 +14,6 @@ jobs:
       matrix:
         config:
           - os: ubuntu-22.04
-          - os: macos-latest
           - os: windows-2022
     steps:
       - name: Install tk on ubuntu
@@ -41,7 +40,6 @@ jobs:
       - name: Build with pyinstaller for ${{ matrix.config.os }}
         uses: knicknic/os-specific-run@v1.0.3
         with:
-          macos: pyinstaller main.py --onefile --noconsole --name FD4D --icon="./assets/Images/Logo.icns" --add-data "./assets:./assets"
           linux: pyinstaller main.py --onefile --noconsole --name FD4D --icon="./assets/Images/Logo.png" --add-data "./assets:./assets"
           windows: pyinstaller main.py --onefile --noconsole --name FD4D --icon="./assets/Images/Logo.ico" --add-data "./assets;./assets"
 
@@ -66,12 +64,6 @@ jobs:
         with:
           name: FD4D-pyinstaller-artifact-ubuntu-22.04
           path: dist-ubuntu-22.04
-
-      - name: Download artifacts macos
-        uses: actions/download-artifact@v4
-        with:
-          name: FD4D-pyinstaller-artifact-macos-latest
-          path: dist-macos-latest
           
       - name: Download artifacts windows
         uses: actions/download-artifact@v4  
@@ -85,8 +77,6 @@ jobs:
       - name: Zip file ubuntu
         run: cd dist-ubuntu-22.04 && zip -r ../FD4D_ubuntu.zip .
 
-      - name: Zip file macos
-        run: cd dist-macos-latest && zip -r ../FD4D_macos.zip .
 
       - name: Create Release
         id: create_release
@@ -100,4 +90,3 @@ jobs:
           files: |
             FD4D_windows.zip
             FD4D_ubuntu.zip
-            FD4D_macos.zip
