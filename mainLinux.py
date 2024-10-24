@@ -6,7 +6,7 @@ from assets.functions.ColorPickFuntions import (
     rgb_to_cmyk,
 )
 from assets.functions.GeneratorFunctions import generate_cnpj, generate_cpf, generate_rg
-from assets.constants.Constants import BACKGROUND_COLOR, HEIGHT_ROOT_LINUX, HEIGHT_ROOT_WINDOWS, WIDTH_ROOT_LINUX, WIDTH_ROOT_WINDOWS
+from assets.constants.Constants import BACKGROUND_COLOR, HEIGHT_ROOT_LINUX, WIDTH_ROOT_LINUX
 from PIL import Image, ImageTk
 from assets.functions.tools import local_path
 from pathlib import Path
@@ -256,13 +256,10 @@ if __name__ == "__main__":
     root = tk.Tk()
     root.title("FD4D")
     sistema_operacional = os.name
-    width = WIDTH_ROOT_LINUX if sistema_operacional == "posix" else WIDTH_ROOT_WINDOWS
-    height = HEIGHT_ROOT_LINUX if sistema_operacional == "posix" else HEIGHT_ROOT_WINDOWS
+    width = WIDTH_ROOT_LINUX 
+    height = HEIGHT_ROOT_LINUX 
     root.geometry("{0}x{1}".format(width, height))
-    if sistema_operacional == "posix":
-        root.iconphoto(True, tk.PhotoImage("assets/Images/Logo.png"))
-    elif sistema_operacional == "nt":
-        root.iconbitmap(base_path / Path("assets/Images/Logo.ico"))
+    root.iconphoto(True, tk.PhotoImage("assets/Images/Logo.png"))
     root.resizable(False, False)
 
     generator = MainWindow(root, width, height)
