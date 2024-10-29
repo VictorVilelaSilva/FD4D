@@ -36,6 +36,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install pyinstaller
+          pip install pyautogui
 
       - name: Build with pyinstaller for ${{ matrix.config.os }}
         uses: knicknic/os-specific-run@v1.0.3
