@@ -31,12 +31,19 @@ jobs:
         with:
           python-version: '3.12.5'
 
-      - name: Install dependencies for ${{ matrix.config.os }}
+      - name: Install dependencies for ubuntu
+        if: ${{ matrix.config.os == 'ubuntu-22.04'}}
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r requirementsLinux.txt
           pip install pyinstaller
-          pip install pyautogui
+
+      - name: Install dependencies for windows
+        if: ${{ matrix.config.os == 'windows-2022'}}
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirementsWin.txt
+          pip install pyinstaller
 
       - name: Build with pyinstaller for ${{ matrix.config.os }}
         uses: knicknic/os-specific-run@v1.0.3
