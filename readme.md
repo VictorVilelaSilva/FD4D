@@ -16,6 +16,7 @@ Estre projeto foi desenvolvido com intuito de facilitar a vida de quem trabalha 
 - **ctrl+alt+h**: Copia a cor hexadecimal para a área de transferência.
 - **ctrl+alt+r**: Copia a cor RGB para a área de transferência.
 - **ctrl+alt+c**: Copia a cor CMYK para a área de transferência.
+asdsadasdasdasd
 
 
 ### Descrição dos Arquivos
