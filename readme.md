@@ -12,7 +12,7 @@ Estre projeto foi desenvolvido com intuito de facilitar a vida de quem trabalha 
 - **ctrl+2**: Gera um CNPJ válido.
 - **ctrl+3**: Gera um RG válido.
 - **ctrl+4**: Gera um UUID.
-- **ctrl+**: Alterna entre máscara de CPF e CNPJ.
+- **ctrl+**:sadada Alterna entre máscara de CPF e CNPJ.
 - **ctrl+alt+h**: Copia a cor hexadecimal para a área de transferência.
 - **ctrl+alt+r**: Copia a cor RGB para a área de transferência.
 - **ctrl+alt+c**: Copia a cor CMYK para a área de transferência.
