@@ -2,6 +2,7 @@
 build
 dist
 .venv
+.tool-versions
 teste.py
 *.pyc
 assets/functions/__pycache__/*
