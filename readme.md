@@ -27,7 +27,6 @@ Abaixo estão os links para download dos executáveis para cada sistema operacio
 > [!IMPORTANT]
 > É comum que o sistema operacional exiba avisos ao executar arquivos .exe gerados com o PyInstaller. Você pode desconsiderar essa mensagem, mas se ainda assim não se sentir seguro, pode rodar o código-fonte, que está disponível no repositório.
 
-
 ### Atalhos disponíveis
 - **ctrl+1**: Gera um RG válido.
 - **ctrl+2**: Gera um CPF válido.
