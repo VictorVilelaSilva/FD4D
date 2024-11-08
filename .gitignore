@@ -5,4 +5,5 @@ dist
 .tool-versions
 teste.py
 *.pyc
+*.cpython-123.pyc
 assets/functions/__pycache__/*

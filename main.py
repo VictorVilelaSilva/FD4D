@@ -1,3 +1,4 @@
+from json import tool
 import os
 from turtle import width
 from assets.functions.ColorPickFuntions import (
@@ -8,6 +9,7 @@ from assets.functions.ColorPickFuntions import (
 from assets.functions.GeneratorFunctions import generate_cnpj, generate_cpf, generate_rg
 from assets.constants.Constants import BACKGROUND_COLOR, HEIGHT_ROOT_LINUX, HEIGHT_ROOT_WINDOWS, WIDTH_ROOT_LINUX, WIDTH_ROOT_WINDOWS
 from PIL import Image, ImageTk
+from tktooltip import ToolTip
 from assets.functions.tools import local_path
 from pathlib import Path
 import tkinter as tk
@@ -116,22 +118,27 @@ class MainWindow:
         self.rg_button = tk.Button(
             self.container1, text="Gerar RG", width=16, command=self.get_rg
         )
+        ToolTip(self.rg_button, "Ctrl + 1")
         self.rg_button.pack(pady=(15, 0))
         self.cpf_button = tk.Button(
             self.container1, text="Gerar CPF", width=16, command=self.get_cpf
         )
+        ToolTip(self.cpf_button, "Ctrl + 2")
         self.cpf_button.pack(pady=(15, 0))
         self.cnpj_button = tk.Button(
             self.container1, text="Gerar CNPJ", width=16, command=self.get_cnpj
         )
+        ToolTip(self.cnpj_button, "Ctrl + 3")
         self.cnpj_button.pack(pady=(15, 0))
         self.uuid_button = tk.Button(
             self.container1, text="Gerar UUID", width=16, command=self.get_uuid
         )
+        ToolTip(self.uuid_button, "Ctrl + 4")
         self.uuid_button.pack(pady=(15, 0))
         self.mask_button = tk.Button(
             self.container1, text="Toggle Mask", width=16, command=self.toggle_mask
         )
+        ToolTip(self.mask_button, "Ctrl + *")
         self.mask_button.pack(pady=(15, 0))
         # endregion
 
@@ -170,6 +177,7 @@ class MainWindow:
             width=10,
             command=lambda: pyperclip.copy(self.hexColor),
         )
+        ToolTip(self.copyHexButton, "Ctrl + Alt + H")
         self.copyHexButton.pack(side="left", padx=1)
         self.colorTextHex = tk.Label(
             self.hexContainer,
@@ -194,6 +202,7 @@ class MainWindow:
             width=10,
             command=lambda: pyperclip.copy(self.rgbColor),
         )
+        ToolTip(self.copyRgbButton, "Ctrl + Alt + R")
         self.copyRgbButton.pack(
             side="left",
             padx=1,
@@ -221,6 +230,7 @@ class MainWindow:
             width=10,
             command=lambda: pyperclip.copy(self.cmykColor),
         )
+        ToolTip(self.copyCmykButton, "Ctrl + Alt + C")
         self.copyCmykButton.pack(side="left", padx=1)
         self.colorTextCmyk = tk.Label(
             self.cmykContainer,

@@ -28,14 +28,17 @@ Abaixo estão os links para download dos executáveis para cada sistema operacio
 > É comum que o sistema operacional exiba avisos ao executar arquivos .exe gerados com o PyInstaller. Você pode desconsiderar essa mensagem, mas se ainda assim não se sentir seguro, pode rodar o código-fonte, que está disponível no repositório.
 
 ### Atalhos disponíveis
-- **ctrl+1**: Gera um RG válido.
-- **ctrl+2**: Gera um CPF válido.
-- **ctrl+3**: Gera um CNPJ válido.
-- **ctrl+4**: Gera um UUID.
-- **ctrl+***: Alterna entre máscara de CPF e CNPJ.
-- **ctrl+alt+h**: Copia a cor hexadecimal para a área de transferência.
-- **ctrl+alt+r**: Copia a cor RGB para a área de transferência.
-- **ctrl+alt+c**: Copia a cor CMYK para a área de transferência.
+
+| Atalho          | Função                                      |
+|-----------------|---------------------------------------------|
+| **ctrl+1**      | Gera um RG válido.                          |
+| **ctrl+2**      | Gera um CPF válido.                         |
+| **ctrl+3**      | Gera um CNPJ válido.                        |
+| **ctrl+4**      | Gera um UUID.                               |
+| **ctrl+***      | Alterna entre máscara de CPF e CNPJ.        |
+| **ctrl+alt+h**  | Copia a cor hexadecimal para a área de transferência. |
+| **ctrl+alt+r**  | Copia a cor RGB para a área de transferência. |
+| **ctrl+alt+c**  | Copia a cor CMYK para a área de transferência. |
 
 ## Instalação
 
