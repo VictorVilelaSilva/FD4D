@@ -1,5 +1,4 @@
 altgraph==0.17.4
-evdev==1.7.1
 Imagegrab==0.0.3
 keyboard==0.13.5
 MouseInfo==0.1.3

@@ -100,16 +100,24 @@ class MainWindow:
         self.headerText.pack(side="top", fill="x", pady=20)
         # endregion
 
+        # Definir o tamanho desejado para o main_container
+        self.main_container = tk.Frame(
+            root,
+            background=BACKGROUND_COLOR,
+            width=width,
+        )
+        self.main_container.pack(side="top", fill="both", expand=True)
+
         # region Gerador
         self.container1 = tk.Frame(
-            root,
+            self.main_container,
             background=BACKGROUND_COLOR,
             border=1,
             relief="sunken",
             width=containersSize["width"],
             height=containersSize["height"],
         )
-        self.container1.pack_propagate(0)  # Evita que o container se ajuste ao conteúdo
+        # self.container1.pack_propagate(0)  # Evita que o container se ajuste ao conteúdo
         self.container1.pack(side="left", expand=True, fill="both")
         self.result_label = tk.Label(self.container1, text="TDFD")
         self.result_label.config(bg="#fff", borderwidth=2.5)
@@ -144,15 +152,15 @@ class MainWindow:
 
         # region Monitor de cores
         self.container2 = tk.Frame(
-            root,
+            self.main_container,
             background=BACKGROUND_COLOR,
             border=1,
             relief="sunken",
             width=containersSize["width"],
             height=containersSize["height"],
         )
-        self.container2.pack_propagate(0)  # Evita que o container se ajuste ao conteúdo
-        self.container2.pack(side="right", expand=True, fill="both")
+        # self.container2.pack_propagate(0)  # Evita que o container se ajuste ao conteúdo
+        self.container2.pack(side="left", expand=True, fill="both")
         self.colorScreen = tk.Label(
             self.container2,
             text="",
@@ -242,6 +250,29 @@ class MainWindow:
         )
         self.colorTextCmyk.pack(side="left", padx=1)
         # endregion
+
+        # Criar novo container na parte inferior
+        self.container_bottom = tk.Frame(
+            root,
+            background=BACKGROUND_COLOR,
+            border=1,
+            relief="sunken",
+            width=width+500,
+            height=1000,
+        )
+        # self.container_bottom.pack_propagate(0)  # Evita que o container se ajuste ao conteúdo
+        self.container_bottom.pack(side="bottom", fill="x")
+
+        # Adicionar widgets ao novo container, se necessário
+        label_bottom = tk.Label(
+            self.container_bottom,
+            text="Novo Container Inferior",
+            bg=BACKGROUND_COLOR,
+            fg="#fff",
+            font=("Fira Code SemiBold", 14),
+        )
+        label_bottom.pack(pady=10)
+
         # region Hotkeys
         listener = keyboard.GlobalHotKeys({
             '<ctrl>+1': self.get_rg,
@@ -273,7 +304,7 @@ if __name__ == "__main__":
         root.iconphoto(True, tk.PhotoImage("assets/Images/Logo.png"))
     elif sistema_operacional == "nt":
         root.iconbitmap(base_path / Path("assets/Images/Logo.ico"))
-    root.resizable(False, False)
+    # root.resizable(False, False)
 
     generator = MainWindow(root, width, height)
     root.mainloop()
