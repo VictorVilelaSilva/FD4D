@@ -5,4 +5,5 @@ venv
 .tool-versions
 teste.py
 *.pyc
+.cpython-312.pyc
 assets/functions/__pycache__/*

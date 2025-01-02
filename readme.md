@@ -19,7 +19,6 @@ Este projeto foi desenvolvido com o intuito de facilitar a vida de quem trabalha
 Abaixo estão os links para download dos executáveis para cada sistema operacional:
 
 - [Windows](https://github.com/VictorVilelaSilva/FD4D/releases/download/2.0.2/FD4D_windows.zip)
-- [Linux](https://github.com/VictorVilelaSilva/FD4D/releases/download/2.0.2/FD4D_ubuntu.zip)
 
 > [!NOTE]
 > So consegui testar o exeutavel para windows, então se tiver algum problema com os outros sistemas operacionais por favor abrir uma issue para que eu possa corrigir.
