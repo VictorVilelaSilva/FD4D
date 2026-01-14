@@ -7,6 +7,7 @@ export const AppLayout: React.FC = () => {
   const tools = toolRegistry.getAllTools()
   const [activeToolId, setActiveToolId] = useState(tools[0]?.id || '')
   const [sidebarVisible, setSidebarVisible] = useState(true)
+  const [infoOpen, setInfoOpen] = useState(false)
 
   const activeTool = toolRegistry.getTool(activeToolId)
   const ActiveToolComponent = activeTool?.component
@@ -95,6 +96,69 @@ export const AppLayout: React.FC = () => {
     fontWeight: theme.typography.fontWeight.bold,
   }
 
+  const infoButtonStyle: React.CSSProperties = {
+    marginLeft: 'auto',
+    background: theme.colors.background.card,
+    border: `1px solid ${theme.colors.border.default}`,
+    borderRadius: theme.borderRadius.full,
+    width: '28px',
+    height: '28px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    cursor: 'pointer',
+    color: theme.colors.text.secondary,
+    fontWeight: theme.typography.fontWeight.bold,
+    transition: theme.transitions.fast,
+  }
+
+  const modalOverlayStyle: React.CSSProperties = {
+    position: 'fixed',
+    inset: 0,
+    background: '#00000066',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: theme.zIndex.modal,
+  }
+
+  const modalStyle: React.CSSProperties = {
+    background: theme.colors.background.card,
+    border: `1px solid ${theme.colors.border.default}`,
+    borderRadius: theme.borderRadius.lg,
+    width: 'min(720px, 90vw)',
+    maxHeight: '80vh',
+    overflowY: 'auto',
+    boxShadow: theme.shadows.lg,
+  }
+
+  const modalHeaderStyle: React.CSSProperties = {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: theme.spacing.lg,
+    borderBottom: `1px solid ${theme.colors.border.default}`,
+    color: theme.colors.text.primary,
+    fontWeight: theme.typography.fontWeight.bold,
+    fontSize: theme.typography.fontSize.xl,
+  }
+
+  const modalBodyStyle: React.CSSProperties = {
+    padding: theme.spacing.lg,
+    color: theme.colors.text.secondary,
+    lineHeight: theme.typography.lineHeight.relaxed,
+    fontSize: theme.typography.fontSize.base,
+  }
+
+  const closeButtonStyle: React.CSSProperties = {
+    background: 'transparent',
+    border: 'none',
+    cursor: 'pointer',
+    color: theme.colors.text.secondary,
+    fontSize: theme.typography.fontSize.xl,
+    lineHeight: 1,
+  }
+
   const sidebarContainerStyle: React.CSSProperties = {
     transform: sidebarVisible ? 'translateX(0)' : 'translateX(-100%)',
     transition: `transform ${theme.transitions.normal}`,
@@ -143,15 +207,49 @@ export const AppLayout: React.FC = () => {
         {activeTool && ActiveToolComponent ? (
           <>
             <header style={headerStyle}>
-              <h1 style={toolTitleStyle}>
-                <span style={{ fontSize: theme.typography.fontSize['3xl'] }}>
-                  {typeof activeTool.icon === 'string' ? activeTool.icon : activeTool.icon}
-                </span>
-                {activeTool.name}
-              </h1>
+              <div style={{ display: 'flex', alignItems: 'center', gap: theme.spacing.md }}>
+                <h1 style={toolTitleStyle}>
+                  <span style={{ fontSize: theme.typography.fontSize['3xl'] }}>
+                    {typeof activeTool.icon === 'string' ? activeTool.icon : activeTool.icon}
+                  </span>
+                  {activeTool.name}
+                </h1>
+                <button
+                  style={infoButtonStyle}
+                  title={`About ${activeTool.name}`}
+                  onClick={() => setInfoOpen(true)}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = theme.colors.primary
+                    e.currentTarget.style.borderColor = theme.colors.primary
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = theme.colors.text.secondary
+                    e.currentTarget.style.borderColor = theme.colors.border.default
+                  }}
+                  aria-label={`More info about ${activeTool.name}`}
+                >
+                  i
+                </button>
+              </div>
               <p style={toolDescStyle}>{activeTool.description}</p>
             </header>
             <ActiveToolComponent />
+
+            {infoOpen && (
+              <div style={modalOverlayStyle} onClick={() => setInfoOpen(false)}>
+                <div style={modalStyle} onClick={(e) => e.stopPropagation()}>
+                  <div style={modalHeaderStyle}>
+                    <span>About {activeTool.name}</span>
+                    <button style={closeButtonStyle} onClick={() => setInfoOpen(false)} aria-label="Close info">×</button>
+                  </div>
+                  <div style={modalBodyStyle}>
+                    {((ActiveToolComponent as any)?.infoContent) || (
+                      <div>{activeTool.description}</div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
           </>
         ) : (
           <div style={emptyStateStyle}>

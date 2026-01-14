@@ -6,6 +6,7 @@ import { CNPJGenerator } from './tools/CNPJGenerator/CNPJGenerator'
 import { UUIDGenerator } from './tools/UUIDGenerator/UUIDGenerator'
 import { CPFValidator } from './tools/CPFValidator/CPFValidator'
 import { CNPJValidator } from './tools/CNPJValidator/CNPJValidator'
+import { WebhookListener } from './tools/WebhookListener/WebhookListener'
 
 // Register all tools
 toolRegistry.registerMany([
@@ -53,6 +54,15 @@ toolRegistry.registerMany([
     category: 'utility',
     component: CNPJValidator,
     tags: ['cnpj', 'brazil', 'validate', 'check', 'verification'],
+  }),
+  createTool({
+    id: 'webhook-listener',
+    name: 'Webhook Listener',
+    description: 'Listen and inspect incoming webhooks',
+    icon: '🪝',
+    category: 'utility',
+    component: WebhookListener,
+    tags: ['webhook', 'http', 'server', 'listener'],
   }),
 ])
 
