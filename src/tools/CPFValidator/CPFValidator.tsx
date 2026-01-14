@@ -98,8 +98,8 @@ export const CPFValidator: React.FC = () => {
     borderRadius: theme.borderRadius.lg,
     border: `2px solid ${result?.isValid ? theme.colors.success : theme.colors.error}`,
     background: result?.isValid
-      ? 'rgba(16, 185, 129, 0.1)'
-      : 'rgba(239, 68, 68, 0.1)',
+      ? theme.colors.successAlpha
+      : theme.colors.errorAlpha,
   }
 
   const resultHeaderStyle: React.CSSProperties = {

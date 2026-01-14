@@ -132,7 +132,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ tools, activeToolId, onToolSel
                       style={{
                         fontSize: theme.typography.fontSize.xs,
                         color: theme.colors.text.tertiary,
-                        marginTop: '2px',
+                        marginTop: theme.spacing.xs,
                       }}
                     >
                       {tool.description}

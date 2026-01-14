@@ -128,7 +128,7 @@ export const UUIDGenerator: React.FC = () => {
   const infoBoxStyle: React.CSSProperties = {
     padding: theme.spacing.md,
     borderRadius: theme.borderRadius.md,
-    background: 'rgba(16, 185, 129, 0.1)',
+    background: theme.colors.accentAlpha,
     border: `1px solid ${theme.colors.accent}`,
     color: theme.colors.text.secondary,
     fontSize: theme.typography.fontSize.sm,

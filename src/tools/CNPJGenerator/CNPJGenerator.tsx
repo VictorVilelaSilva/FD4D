@@ -114,7 +114,7 @@ export const CNPJGenerator: React.FC = () => {
   const infoBoxStyle: React.CSSProperties = {
     padding: theme.spacing.md,
     borderRadius: theme.borderRadius.md,
-    background: 'rgba(168, 85, 247, 0.1)',
+    background: theme.colors.secondaryAlpha,
     border: `1px solid ${theme.colors.secondary}`,
     color: theme.colors.text.secondary,
     fontSize: theme.typography.fontSize.sm,

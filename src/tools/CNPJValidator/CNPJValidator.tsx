@@ -102,8 +102,8 @@ export const CNPJValidator: React.FC = () => {
     borderRadius: theme.borderRadius.lg,
     border: `2px solid ${result?.isValid ? theme.colors.success : theme.colors.error}`,
     background: result?.isValid
-      ? 'rgba(16, 185, 129, 0.1)'
-      : 'rgba(239, 68, 68, 0.1)',
+      ? theme.colors.successAlpha
+      : theme.colors.errorAlpha,
   }
 
   const resultHeaderStyle: React.CSSProperties = {
@@ -167,7 +167,7 @@ export const CNPJValidator: React.FC = () => {
   const infoBoxStyle: React.CSSProperties = {
     padding: theme.spacing.md,
     borderRadius: theme.borderRadius.md,
-    background: 'rgba(168, 85, 247, 0.1)',
+    background: theme.colors.secondaryAlpha,
     border: `1px solid ${theme.colors.secondary}`,
     color: theme.colors.text.secondary,
     fontSize: theme.typography.fontSize.sm,

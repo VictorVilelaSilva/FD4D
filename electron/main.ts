@@ -17,7 +17,7 @@ function createWindow() {
       contextIsolation: false,
       webSecurity: true,
     },
-    backgroundColor: '#1a1a2e',
+    backgroundColor: '#0D1117',
     title: 'FD4D - From Dev for Dev',
     autoHideMenuBar: true,
   })

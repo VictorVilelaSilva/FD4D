@@ -4,59 +4,67 @@
  * A comprehensive design system with carefully chosen colors,
  * spacing, typography, and other design tokens for a modern,
  * professional developer tool interface.
+ *
+ * Color palette based on FD4D branding with the purple "4".
  */
 
 export const theme = {
   colors: {
-    // Primary palette - Deep blue with tech vibes
-    primary: '#6C63FF',
-    primaryLight: '#8B85FF',
-    primaryDark: '#5449E0',
-    primaryAlpha: 'rgba(108, 99, 255, 0.1)',
+    // Primary palette - FD4D Purple (the "4")
+    primary: '#9F6DFF',
+    primaryLight: '#B794FF',
+    primaryDark: '#8257E5',
+    primaryAlpha: 'rgba(159, 109, 255, 0.1)',
 
-    // Secondary palette - Complementary purple
-    secondary: '#A855F7',
-    secondaryLight: '#C084FC',
-    secondaryDark: '#9333EA',
+    // Secondary palette - Deeper purple tones
+    secondary: '#8257E5',
+    secondaryLight: '#9F6DFF',
+    secondaryDark: '#6B46C1',
+    secondaryAlpha: 'rgba(130, 87, 229, 0.1)',
 
-    // Accent colors
-    accent: '#10B981',
-    accentLight: '#34D399',
-    accentDark: '#059669',
+    // Accent colors - Cyan/Teal for contrast
+    accent: '#58A6FF',
+    accentLight: '#79B8FF',
+    accentDark: '#388BFD',
+    accentAlpha: 'rgba(88, 166, 255, 0.1)',
 
-    // Background colors - Dark theme
+    // Background colors - GitHub-inspired dark theme
     background: {
-      primary: '#1a1a2e',
-      secondary: '#16213e',
-      tertiary: '#0f1729',
-      card: '#232946',
-      hover: '#2d3561',
+      primary: '#0D1117',
+      secondary: '#161B22',
+      tertiary: '#0A0D12',
+      card: '#1C2128',
+      hover: '#21262D',
     },
 
     // Text colors
     text: {
-      primary: '#EAEAEA',
-      secondary: '#B8B8D1',
-      tertiary: '#9191A8',
-      disabled: '#5F5F7E',
-      inverse: '#1a1a2e',
+      primary: '#FFFFFF',
+      secondary: '#C9D1D9',
+      tertiary: '#8B949E',
+      disabled: '#484F58',
+      inverse: '#0D1117',
     },
 
     // Status colors
-    success: '#10B981',
-    successLight: '#D1FAE5',
-    error: '#EF4444',
-    errorLight: '#FEE2E2',
-    warning: '#F59E0B',
-    warningLight: '#FEF3C7',
-    info: '#3B82F6',
-    infoLight: '#DBEAFE',
+    success: '#3FB950',
+    successLight: '#56D364',
+    successAlpha: 'rgba(63, 185, 80, 0.1)',
+    error: '#F85149',
+    errorLight: '#FF7B72',
+    errorAlpha: 'rgba(248, 81, 73, 0.1)',
+    warning: '#D29922',
+    warningLight: '#E3B341',
+    warningAlpha: 'rgba(210, 153, 34, 0.1)',
+    info: '#58A6FF',
+    infoLight: '#79B8FF',
+    infoAlpha: 'rgba(88, 166, 255, 0.1)',
 
     // Border colors
     border: {
-      default: '#363B5E',
-      light: '#4A5177',
-      dark: '#1F2437',
+      default: '#30363D',
+      light: '#484F58',
+      dark: '#21262D',
     },
 
     // Utility
@@ -113,13 +121,13 @@ export const theme = {
   },
 
   shadows: {
-    sm: '0 1px 2px rgba(0, 0, 0, 0.05)',
-    md: '0 4px 6px rgba(0, 0, 0, 0.1)',
-    lg: '0 10px 15px rgba(0, 0, 0, 0.1)',
-    xl: '0 20px 25px rgba(0, 0, 0, 0.15)',
-    inner: 'inset 0 2px 4px rgba(0, 0, 0, 0.06)',
-    glow: '0 0 20px rgba(108, 99, 255, 0.3)',
-    glowAccent: '0 0 20px rgba(16, 185, 129, 0.3)',
+    sm: '0 1px 2px rgba(0, 0, 0, 0.3)',
+    md: '0 4px 6px rgba(0, 0, 0, 0.4)',
+    lg: '0 10px 15px rgba(0, 0, 0, 0.4)',
+    xl: '0 20px 25px rgba(0, 0, 0, 0.5)',
+    inner: 'inset 0 2px 4px rgba(0, 0, 0, 0.2)',
+    glow: '0 0 20px rgba(159, 109, 255, 0.3)',
+    glowAccent: '0 0 20px rgba(88, 166, 255, 0.3)',
   },
 
   transitions: {

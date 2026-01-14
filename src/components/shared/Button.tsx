@@ -36,7 +36,7 @@ export const Button: React.FC<ButtonProps> = ({
       danger: {
         background: theme.colors.error,
         color: theme.colors.white,
-        hoverBackground: '#F87171',
+        hoverBackground: theme.colors.errorLight,
       },
       ghost: {
         background: 'transparent',
