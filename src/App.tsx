@@ -1,50 +1,46 @@
 import { useState } from "react";
-import reactLogo from "./assets/react.svg";
 import { invoke } from "@tauri-apps/api/core";
 import "./App.css";
 
 function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+  const [cpf, setCpf] = useState("");
+  const [withMask, setWithMask] = useState(true);
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
+  async function handleGerarCpf() {
+    try {
+      const generatedCpf = await invoke<string>("generate_cpf", {
+        withMask: withMask,
+      });
+      setCpf(generatedCpf);
+    } catch (error) {
+      console.error("Erro ao gerar CPF:", error);
+    }
   }
 
+
   return (
-    <main className="container">
-      <h1>Welcome to Tauri + React</h1>
+    <div className="container">
+      <h1>Gerador de CPF</h1>
 
       <div className="row">
-        <a href="https://vite.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <label>
+          <input
+            type="checkbox"
+            checked={withMask}
+            onChange={(e) => setWithMask(e.target.checked)}
+          />
+          Com Máscara
+        </label>
       </div>
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
 
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
-        }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
-    </main>
+      <button onClick={handleGerarCpf}>Gerar CPF</button>
+      {cpf && (
+        <div className="result">
+          <p>CPF Gerado:</p>
+          <code>{cpf}</code>
+        </div>
+      )}
+    </div>
   );
 }
 
