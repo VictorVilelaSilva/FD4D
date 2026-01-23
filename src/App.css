@@ -1,32 +1,22 @@
-.container {
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+    Ubuntu, Cantarell, sans-serif;
+}
+
+.app-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  gap: 1rem;
+  height: 100vh;
+  overflow: hidden;
 }
 
-.row {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-button {
-  padding: 0.75rem 2rem;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-.result {
-  margin-top: 1rem;
-  padding: 1rem;
-  background-color: #f0f0f0;
-  border-radius: 8px;
-}
-
-.result code {
-  font-size: 1.2rem;
-  font-weight: bold;
+.conteudo {
+  flex: 1;
+  overflow-y: auto;
+  background-color: #ffffff;
 }

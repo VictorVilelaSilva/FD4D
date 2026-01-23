@@ -1,45 +1,25 @@
 import { useState } from "react";
-import { invoke } from "@tauri-apps/api/core";
+import Webhook from "./components/Webhook";
+import ColorPicker from "./components/ColorPicker";
 import "./App.css";
+import GeradorCPF from "./components/CPFGenerator/CPFGenerator";
+import Sidebar from "./components/sidebar/Sidebar";
 
 function App() {
-  const [cpf, setCpf] = useState("");
-  const [withMask, setWithMask] = useState(true);
-
-  async function handleGerarCpf() {
-    try {
-      const generatedCpf = await invoke<string>("generate_cpf", {
-        withMask: withMask,
-      });
-      setCpf(generatedCpf);
-    } catch (error) {
-      console.error("Erro ao gerar CPF:", error);
-    }
-  }
-
+  const [ferramentaAtiva, setFerramentaAtiva] = useState("cpf");
 
   return (
-    <div className="container">
-      <h1>Gerador de CPF</h1>
+    <div className="app-container">
+      <Sidebar
+        ferramentaAtiva={ferramentaAtiva}
+        setFerramentaAtiva={setFerramentaAtiva}
+      />
 
-      <div className="row">
-        <label>
-          <input
-            type="checkbox"
-            checked={withMask}
-            onChange={(e) => setWithMask(e.target.checked)}
-          />
-          Com Máscara
-        </label>
-      </div>
-
-      <button onClick={handleGerarCpf}>Gerar CPF</button>
-      {cpf && (
-        <div className="result">
-          <p>CPF Gerado:</p>
-          <code>{cpf}</code>
-        </div>
-      )}
+      <main className="conteudo">
+        {ferramentaAtiva === "cpf" && <GeradorCPF />}
+        {ferramentaAtiva === "webhook" && <Webhook />}
+        {ferramentaAtiva === "colorpicker" && <ColorPicker />}
+      </main>
     </div>
   );
 }
