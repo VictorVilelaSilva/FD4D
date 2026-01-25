@@ -1,27 +1,23 @@
 import { useState } from "react";
-import Webhook from "./components/Webhook";
-import ColorPicker from "./components/ColorPicker";
 import "./App.css";
-import GeradorCPF from "./components/CPFGenerator/CPFGenerator";
-import Sidebar from "./components/sidebar/Sidebar";
+import Contador from "./components/Contador";
 
 function App() {
-  const [ferramentaAtiva, setFerramentaAtiva] = useState("cpf");
+  const [numero, setNumero] = useState(0);
+
+  function aumentar() {
+    setNumero(numero + 1);
+  }
 
   return (
-    <div className="app-container">
-      <Sidebar
-        ferramentaAtiva={ferramentaAtiva}
-        setFerramentaAtiva={setFerramentaAtiva}
-      />
 
-      <main className="conteudo">
-        {ferramentaAtiva === "cpf" && <GeradorCPF />}
-        {ferramentaAtiva === "webhook" && <Webhook />}
-        {ferramentaAtiva === "colorpicker" && <ColorPicker />}
-      </main>
+    <div>
+      <h1>Total Geral: {numero}</h1>
+      {/* Quero que este comece do zero */}
+      <Contador valorInicial={numero} acao={aumentar} />
+
     </div>
-  );
+  )
 }
 
 export default App;
