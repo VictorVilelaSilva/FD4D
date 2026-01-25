@@ -2,11 +2,11 @@ import { useState } from "react";
 import Webhook from "./components/Webhook";
 import ColorPicker from "./components/ColorPicker";
 import "./App.css";
-import GeradorCPF from "./components/CPFGenerator/CPFGenerator";
 import Sidebar from "./components/sidebar/Sidebar";
+import GeradorCPFCNPJ from "./components/CPFGenerator/GeradorCPFCNPJ";
 
 function App() {
-  const [ferramentaAtiva, setFerramentaAtiva] = useState("cpf");
+  const [ferramentaAtiva, setFerramentaAtiva] = useState("cpf/cnpj");
 
   return (
     <div className="app-container">
@@ -16,7 +16,7 @@ function App() {
       />
 
       <main className="conteudo">
-        {ferramentaAtiva === "cpf" && <GeradorCPF />}
+        {ferramentaAtiva === "cpf/cnpj" && <GeradorCPFCNPJ />}
         {ferramentaAtiva === "webhook" && <Webhook />}
         {ferramentaAtiva === "colorpicker" && <ColorPicker />}
       </main>

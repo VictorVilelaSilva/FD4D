@@ -5,18 +5,53 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-    Ubuntu, Cantarell, sans-serif;
+  font-family: var(--font-family);
+  color: var(--font-primary);
+  min-height: 100vh;
+}
+
+h1 {
+  color: var(--font-primary);
 }
 
 .app-container {
   display: flex;
-  height: 100vh;
+  flex-direction: row;
+  min-height: 100vh;
   overflow: hidden;
 }
 
 .conteudo {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-xl);
+  padding: var(--spacing-xl);
   overflow-y: auto;
-  background-color: #ffffff;
+  background-color: var(--bg-primary);
+}
+
+/* Responsividade para tablets */
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
+
+  .conteudo {
+    padding: 1rem;
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .conteudo {
+    padding: 0.75rem;
+    gap: 1rem;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
 }

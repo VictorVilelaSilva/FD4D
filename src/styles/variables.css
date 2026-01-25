@@ -1,0 +1,83 @@
+/* ===================================
+   FD4D - Variáveis CSS Globais
+   =================================== */
+
+:root {
+    /* ===== CORES DE FONTE ===== */
+    --font-primary: #fffefe;
+    --font-secondary: #7f8c8d;
+    --font-accent: #3498db;
+    --font-success: #27ae60;
+    --font-error: #e74c3c;
+    --font-warning: #f39c12;
+
+    /* ===== CORES DE BACKGROUND ===== */
+    --bg-primary: #0d1016;
+    --bg-secondary: #1c1c1e;
+    --bg-accent: #8c52ff;
+    --bg-hover: #34495e;
+
+    /* ===== CORES DE COMPONENTES ===== */
+    --card-bg: var(--bg-secondary);
+    --sidebar-bg: var(--bg-secondary);
+    --input-bg: var(--bg-primary);
+    --button-bg: var(--bg-accent);
+    --button-hover: #4500ce;
+
+    /* ===== BORDAS ===== */
+    --border-primary: #52368b;
+    --border-secondary: #34495e;
+    --border-radius-sm: 6px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+
+    /* ===== SOMBRAS ===== */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0 4px 15px rgba(52, 152, 219, 0.2);
+    --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.3);
+
+    /* ===== ESPAÇAMENTOS ===== */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 0.75rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-xxl: 3rem;
+
+    /* ===== TIPOGRAFIA ===== */
+    --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
+        Ubuntu, Cantarell, sans-serif;
+    --font-mono: 'Courier New', monospace;
+
+    --font-size-xs: 0.75rem;
+    --font-size-sm: 0.875rem;
+    --font-size-md: 1rem;
+    --font-size-lg: 1.25rem;
+    --font-size-xl: 1.5rem;
+    --font-size-xxl: 2rem;
+
+    /* ===== TRANSIÇÕES ===== */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.2s ease;
+    --transition-slow: 0.3s ease;
+}
+
+/* ===== TEMA ESCURO (padrão) ===== */
+[data-theme="dark"] {
+    --font-primary: #fffefe;
+    --font-secondary: #7f8c8d;
+    --bg-primary: #0d1016;
+    --bg-secondary: #1c1c1e;
+    --bg-tertiary: #2c3e50;
+}
+
+/* ===== TEMA CLARO (opcional) ===== */
+[data-theme="light"] {
+    --font-primary: #2c3e50;
+    --font-secondary: #7f8c8d;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f5f6fa;
+    --bg-tertiary: #ecf0f1;
+    --card-bg: #ffffff;
+    --sidebar-bg: #2c3e50;
+}
