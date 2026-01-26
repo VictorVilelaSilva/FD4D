@@ -16,7 +16,7 @@ h1 {
 
 .app-container {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   min-height: 100vh;
   overflow: hidden;
 }
@@ -29,18 +29,34 @@ h1 {
   align-items: center;
   gap: var(--spacing-xl);
   padding: var(--spacing-xl);
+  padding-bottom: 100px;
   overflow-y: auto;
   background-color: var(--bg-primary);
 }
 
+.home-welcome {
+  text-align: center;
+}
+
+.home-welcome h1 {
+  font-size: 3rem;
+  margin-bottom: var(--spacing-sm);
+  background: linear-gradient(135deg, var(--bg-accent), #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.home-welcome p {
+  color: var(--font-secondary);
+  font-size: var(--font-size-lg);
+}
+
 /* Responsividade para tablets */
 @media (max-width: 768px) {
-  .app-container {
-    flex-direction: column;
-  }
-
   .conteudo {
     padding: 1rem;
+    padding-bottom: 90px;
     gap: 1.5rem;
   }
 }
@@ -48,10 +64,15 @@ h1 {
 @media (max-width: 480px) {
   .conteudo {
     padding: 0.75rem;
+    padding-bottom: 80px;
     gap: 1rem;
   }
 
   h1 {
     font-size: 1.5rem;
+  }
+
+  .home-welcome h1 {
+    font-size: 2rem;
   }
 }
