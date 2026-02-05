@@ -1,24 +1,9 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: var(--font-family);
-  color: var(--font-primary);
-  min-height: 100vh;
-}
-
-h1 {
-  color: var(--font-primary);
-}
-
 .app-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   overflow: hidden;
+  position: relative;
 }
 
 .conteudo {
@@ -31,25 +16,80 @@ h1 {
   padding: var(--spacing-xl);
   padding-bottom: 100px;
   overflow-y: auto;
-  background-color: var(--bg-primary);
+  position: relative;
+  z-index: 1;
 }
 
 .home-welcome {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
 }
 
-.home-welcome h1 {
-  font-size: 3rem;
-  margin-bottom: var(--spacing-sm);
-  background: linear-gradient(135deg, var(--bg-accent), #a855f7);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+/* Brand Logo - FROM DEV 4 DEVS */
+.brand-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-family: 'Bevan', serif;
+  font-weight: 400;
+  font-size: clamp(4rem, 12vw, 8rem);
+  line-height: 0.85;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
 }
 
-.home-welcome p {
-  color: var(--font-secondary);
-  font-size: var(--font-size-lg);
+.brand-line-from {
+  color: var(--font-primary);
+  position: relative;
+  margin-left: 0.35em;
+
+}
+
+
+.brand-line-dev {
+  color: var(--font-primary);
+  position: relative;
+  margin-left: 0.8em;
+}
+
+.bevan-regular {
+  font-family: "Bevan", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.bevan-regular-italic {
+  font-family: "Bevan", serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.brand-line-last {
+  display: flex;
+  align-items: baseline;
+}
+
+.brand-accent {
+  font-family: 'Archivo Black', sans-serif;
+  font-weight: 400;
+  font-size: 1.1em;
+  letter-spacing: -0.02em;
+  margin-right: -0.15em;
+  position: relative;
+}
+
+/* Decoração adicional */
+.brand-decoration {
+  position: absolute;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, var(--bg-accent), transparent);
+  bottom: -8px;
+  left: 0;
+  border-radius: 2px;
 }
 
 /* Responsividade para tablets */
@@ -58,6 +98,10 @@ h1 {
     padding: 1rem;
     padding-bottom: 90px;
     gap: 1.5rem;
+  }
+
+  .brand-logo {
+    font-size: clamp(3rem, 10vw, 5rem);
   }
 }
 
@@ -68,11 +112,7 @@ h1 {
     gap: 1rem;
   }
 
-  h1 {
-    font-size: 1.5rem;
-  }
-
-  .home-welcome h1 {
-    font-size: 2rem;
+  .brand-logo {
+    font-size: clamp(2.5rem, 12vw, 4rem);
   }
 }
