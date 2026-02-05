@@ -2,8 +2,9 @@ import { useState } from "react";
 import Webhook from "./components/Webhook";
 import ColorPicker from "./components/ColorPicker";
 import "./App.css";
-import Dock from "./components/Dock/Dock";
+import DockNav from "./components/Dock/Dock";
 import GeradorCPFCNPJ from "./components/CPFGenerator/GeradorCPFCNPJ";
+import { RetroGrid } from "./components/ui/retro-grid";
 import { DotPattern } from "./components/ui/dot-pattern";
 import { AuroraText } from "./components/ui/aurora-text";
 import { SparklesText } from "./components/ui/sparkles-text";
@@ -11,18 +12,31 @@ import { SparklesText } from "./components/ui/sparkles-text";
 function App() {
   const [ferramentaAtiva, setFerramentaAtiva] = useState("home");
 
+  const isHome = ferramentaAtiva === "home";
+
   return (
     <div className="app-container">
-      {/* Background Pattern */}
-      <DotPattern
-        className="opacity-30"
-        width={24}
-        height={24}
-        cr={1.5}
-      />
+      {/* Background condicional: RetroGrid na home, DotPattern nas outras */}
+      {isHome ? (
+        <RetroGrid
+          className="opacity-30"
+          angle={65}
+          cellSize={50}
+          opacity={0.3}
+          darkLineColor="rgba(140, 82, 255, 0.25)"
+          lightLineColor="rgba(140, 82, 255, 0.15)"
+        />
+      ) : (
+        <DotPattern
+          className="opacity-20"
+          width={24}
+          height={24}
+          cr={1.2}
+        />
+      )}
 
       <main className="conteudo">
-        {ferramentaAtiva === "home" && (
+        {isHome && (
           <div className="home-welcome">
             <div className="brand-logo">
               <span className="brand-line-from bevan-regular">FROM</span>
@@ -52,7 +66,7 @@ function App() {
         {ferramentaAtiva === "colorpicker" && <ColorPicker />}
       </main>
 
-      <Dock
+      <DockNav
         ferramentaAtiva={ferramentaAtiva}
         setFerramentaAtiva={setFerramentaAtiva}
       />

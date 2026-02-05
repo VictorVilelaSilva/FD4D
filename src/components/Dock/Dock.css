@@ -1,4 +1,4 @@
-.dock {
+.dock-nav {
   position: fixed;
   bottom: var(--spacing-lg);
   left: 50%;
@@ -6,67 +6,68 @@
   z-index: 1000;
 }
 
-.dock-container {
-  display: flex;
-  align-items: flex-end;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-sm);
-  padding-top: var(--spacing-xl);
-  background-color: #1a1a1c;
-  border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+.dock-bar {
+  background-color: rgba(26, 26, 28, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(140, 82, 255, 0.1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 8px 12px !important;
+  gap: 4px !important;
+  border-radius: 18px !important;
 }
 
-.dock-item {
+.dock-icon-item {
+  color: var(--font-secondary);
+  transition: color var(--transition-normal);
+  position: relative;
+}
+
+.dock-icon-item:hover {
+  color: var(--font-primary);
+}
+
+.dock-icon-item.active {
+  color: var(--bg-accent);
+}
+
+.dock-icon-inner {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
-  border: none;
-  background-color: #2a2a2c;
-  color: var(--font-secondary);
-  cursor: pointer;
-  transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1),
-              background-color var(--transition-normal),
-              color var(--transition-normal);
-  transform-origin: bottom center;
-  will-change: transform;
-}
-
-.dock-item:hover {
-  background-color: #3a3a3c;
-  color: var(--font-primary);
-}
-
-.dock-item.active {
-  background-color: #3a3a3c;
-  color: var(--font-primary);
-}
-
-.dock-item-wrapper {
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  background-color: rgba(42, 42, 44, 0.6);
+  transition: background-color var(--transition-normal);
   position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+}
+
+.dock-icon-item:hover .dock-icon-inner {
+  background-color: rgba(58, 58, 60, 0.8);
+}
+
+.dock-icon-item.active .dock-icon-inner {
+  background-color: rgba(140, 82, 255, 0.15);
 }
 
 .dock-tooltip {
   position: absolute;
+  bottom: calc(100% + 12px);
   left: 50%;
-  transform: translateX(-50%) translateY(10px);
-  background-color: #2a2a2c;
+  transform: translateX(-50%) translateY(6px);
+  background-color: rgba(42, 42, 44, 0.95);
   color: var(--font-primary);
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: var(--font-size-sm);
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: var(--font-size-xs);
+  font-family: var(--font-mono);
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s ease, transform 0.2s ease, bottom 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.15s ease, transform 0.15s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .dock-tooltip.visible {
@@ -76,19 +77,13 @@
 
 /* Responsividade */
 @media (max-width: 480px) {
-  .dock {
+  .dock-nav {
     bottom: var(--spacing-sm);
     width: calc(100% - var(--spacing-lg));
   }
 
-  .dock-container {
-    width: 100%;
-    justify-content: space-around;
-    padding: var(--spacing-xs);
-  }
-
-  .dock-item {
-    width: 44px;
-    height: 44px;
+  .dock-bar {
+    width: 100% !important;
+    justify-content: space-around !important;
   }
 }

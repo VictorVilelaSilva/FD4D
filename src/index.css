@@ -9,6 +9,7 @@
     --animate-aurora: aurora 8s ease infinite;
     --animate-shine: shine var(--duration) infinite linear;
     --animate-blink-cursor: blink-cursor 1s step-end infinite;
+    --animate-grid: grid 15s linear infinite;
 
     @keyframes gradient {
 
@@ -85,6 +86,16 @@
             opacity: 0;
         }
     }
+
+    @keyframes grid {
+        0% {
+            transform: translateY(-50%);
+        }
+
+        100% {
+            transform: translateY(0);
+        }
+    }
 }
 
 /* ===== RESET E BASE ===== */
@@ -99,6 +110,11 @@ body {
     color: var(--font-primary);
     background-color: var(--bg-primary);
     min-height: 100vh;
+}
+
+/* Forçar classe dark para RetroGrid funcionar com o tema escuro */
+:root {
+    color-scheme: dark;
 }
 
 h1 {
