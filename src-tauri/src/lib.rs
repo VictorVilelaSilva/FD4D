@@ -9,6 +9,7 @@ use once_cell::sync::Lazy;
 use rand::Rng;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use std::process::Command;
 use std::sync::{Arc, Mutex};
 use tower_http::cors::CorsLayer;
 
@@ -467,6 +468,140 @@ fn validar_cnpj(cnpj_input: &str) -> Result<bool, String> {
     Ok(true)
 }
 
+// ==================== COLOR PICKER ====================
+
+#[derive(Clone, Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct PixelColor {
+    r: u8,
+    g: u8,
+    b: u8,
+    hex: String,
+    rgb: String,
+    cmyk: String,
+}
+
+fn rgb_to_cmyk(r: u8, g: u8, b: u8) -> (f64, f64, f64, f64) {
+    if r == 0 && g == 0 && b == 0 {
+        return (0.0, 0.0, 0.0, 100.0);
+    }
+
+    let r_prime = r as f64 / 255.0;
+    let g_prime = g as f64 / 255.0;
+    let b_prime = b as f64 / 255.0;
+
+    let k = 1.0 - r_prime.max(g_prime).max(b_prime);
+    let c = (1.0 - r_prime - k) / (1.0 - k);
+    let m = (1.0 - g_prime - k) / (1.0 - k);
+    let y = (1.0 - b_prime - k) / (1.0 - k);
+
+    (c * 100.0, m * 100.0, y * 100.0, k * 100.0)
+}
+
+fn is_wayland() -> bool {
+    std::env::var("WAYLAND_DISPLAY").is_ok()
+        || std::env::var("XDG_SESSION_TYPE")
+            .map(|s| s == "wayland")
+            .unwrap_or(false)
+}
+
+fn get_pixel_color_wayland(x: i32, y: i32) -> Result<PixelColor, String> {
+    // Use grim to capture a 1x1 region as PPM (raw pixel format)
+    let output = Command::new("grim")
+        .args(["-g", &format!("{},{} 1x1", x, y), "-t", "ppm", "-"])
+        .output()
+        .map_err(|e| {
+            format!(
+                "Falha ao executar grim: {}. Instale com: sudo dnf install grim",
+                e
+            )
+        })?;
+
+    if !output.status.success() {
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        return Err(format!("grim falhou: {}", stderr));
+    }
+
+    // Parse PPM format: "P6\n1 1\n255\n" followed by 3 bytes (RGB)
+    let data = &output.stdout;
+    // Find the end of the PPM header (3 newlines for P6 format)
+    let mut newline_count = 0;
+    let mut header_end = 0;
+    for (i, &byte) in data.iter().enumerate() {
+        if byte == b'\n' {
+            newline_count += 1;
+            if newline_count == 3 {
+                header_end = i + 1;
+                break;
+            }
+        }
+    }
+
+    if header_end == 0 || data.len() < header_end + 3 {
+        return Err("Formato PPM inválido".to_string());
+    }
+
+    let r = data[header_end];
+    let g = data[header_end + 1];
+    let b = data[header_end + 2];
+
+    build_pixel_color(r, g, b)
+}
+
+fn get_pixel_color_x11(x: i32, y: i32) -> Result<PixelColor, String> {
+    use x11rb::connection::Connection;
+    use x11rb::protocol::xproto::{ConnectionExt, ImageFormat};
+
+    let (conn, screen_num) =
+        x11rb::connect(None).map_err(|e| format!("Falha ao conectar ao X11: {}", e))?;
+
+    let screen = &conn.setup().roots[screen_num];
+    let root = screen.root;
+
+    let image = conn
+        .get_image(ImageFormat::Z_PIXMAP, root, x as i16, y as i16, 1, 1, !0)
+        .map_err(|e| format!("Falha ao capturar imagem: {}", e))?
+        .reply()
+        .map_err(|e| format!("Falha ao obter resposta: {}", e))?;
+
+    let data = &image.data;
+    if data.len() < 3 {
+        return Err("Dados de pixel inválidos".to_string());
+    }
+
+    // X11 retorna formato BGR(A)
+    let b = data[0];
+    let g = data[1];
+    let r = data[2];
+
+    build_pixel_color(r, g, b)
+}
+
+fn build_pixel_color(r: u8, g: u8, b: u8) -> Result<PixelColor, String> {
+    let hex = format!("#{:02X}{:02X}{:02X}", r, g, b);
+    let rgb_str = format!("rgb({}, {}, {})", r, g, b);
+    let (c, m, y_val, k) = rgb_to_cmyk(r, g, b);
+    let cmyk = format!("cmyk({:.0}%, {:.0}%, {:.0}%, {:.0}%)", c, m, y_val, k);
+
+    Ok(PixelColor {
+        r,
+        g,
+        b,
+        hex,
+        rgb: rgb_str,
+        cmyk,
+    })
+}
+
+#[tauri::command(rename_all = "camelCase")]
+fn get_pixel_color(x: i32, y: i32) -> Result<PixelColor, String> {
+    if is_wayland() {
+        get_pixel_color_wayland(x, y)
+    } else {
+        get_pixel_color_x11(x, y)
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -481,7 +616,8 @@ pub fn run() {
             stop_webhook_server,
             get_webhook_requests,
             clear_webhook_requests,
-            send_webhook_request
+            send_webhook_request,
+            get_pixel_color
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

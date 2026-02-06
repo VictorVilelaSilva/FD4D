@@ -1,6 +1,6 @@
 import { useState } from "react";
 import WebhookTool from "./components/Webhook/WebhookTool";
-import ColorPicker from "./components/ColorPicker";
+import ColorPicker from "./components/ColorPicker/ColorPicker";
 import "./App.css";
 import DockNav from "./components/Dock/Dock";
 import GeradorCPFCNPJ from "./components/CPFGenerator/GeradorCPFCNPJ";
