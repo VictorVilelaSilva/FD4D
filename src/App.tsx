@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Webhook from "./components/Webhook";
+import WebhookTool from "./components/Webhook/WebhookTool";
 import ColorPicker from "./components/ColorPicker";
 import "./App.css";
 import DockNav from "./components/Dock/Dock";
@@ -64,7 +64,7 @@ function App() {
         )}
         {ferramentaAtiva === "cpf/cnpj" && <GeradorCPFCNPJ />}
         {ferramentaAtiva === "validador" && <ValidadorCPFCNPJ />}
-        {ferramentaAtiva === "webhook" && <Webhook />}
+        {ferramentaAtiva === "webhook" && <WebhookTool />}
         {ferramentaAtiva === "colorpicker" && <ColorPicker />}
       </main>
 
