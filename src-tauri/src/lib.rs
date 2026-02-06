@@ -498,6 +498,105 @@ fn rgb_to_cmyk(r: u8, g: u8, b: u8) -> (f64, f64, f64, f64) {
     (c * 100.0, m * 100.0, y * 100.0, k * 100.0)
 }
 
+fn build_pixel_color(r: u8, g: u8, b: u8) -> Result<PixelColor, String> {
+    let hex = format!("#{:02X}{:02X}{:02X}", r, g, b);
+    let rgb_str = format!("rgb({}, {}, {})", r, g, b);
+    let (c, m, y_val, k) = rgb_to_cmyk(r, g, b);
+    let cmyk = format!("cmyk({:.0}%, {:.0}%, {:.0}%, {:.0}%)", c, m, y_val, k);
+
+    Ok(PixelColor {
+        r,
+        g,
+        b,
+        hex,
+        rgb: rgb_str,
+        cmyk,
+    })
+}
+
+// ---- Windows: Win32 API (GetDC + GetPixel) ----
+#[cfg(target_os = "windows")]
+fn platform_get_pixel_color(x: i32, y: i32) -> Result<PixelColor, String> {
+    use std::ptr;
+
+    #[link(name = "user32")]
+    extern "system" {
+        fn GetDC(hWnd: *mut std::ffi::c_void) -> *mut std::ffi::c_void;
+        fn ReleaseDC(hWnd: *mut std::ffi::c_void, hDC: *mut std::ffi::c_void) -> i32;
+    }
+
+    #[link(name = "gdi32")]
+    extern "system" {
+        fn GetPixel(hdc: *mut std::ffi::c_void, x: i32, y: i32) -> u32;
+    }
+
+    unsafe {
+        let hdc = GetDC(ptr::null_mut());
+        if hdc.is_null() {
+            return Err("Falha ao obter Device Context da tela".to_string());
+        }
+
+        let color = GetPixel(hdc, x, y);
+        ReleaseDC(ptr::null_mut(), hdc);
+
+        if color == 0xFFFFFFFF {
+            return Err("Falha ao capturar pixel (coordenada fora da tela)".to_string());
+        }
+
+        // COLORREF format: 0x00BBGGRR
+        let r = (color & 0xFF) as u8;
+        let g = ((color >> 8) & 0xFF) as u8;
+        let b = ((color >> 16) & 0xFF) as u8;
+
+        build_pixel_color(r, g, b)
+    }
+}
+
+// ---- macOS: screencapture + BMP parsing ----
+#[cfg(target_os = "macos")]
+fn platform_get_pixel_color(x: i32, y: i32) -> Result<PixelColor, String> {
+    let tmp_path = "/tmp/fd4d_pixel.bmp";
+
+    let output = Command::new("screencapture")
+        .args([
+            "-R",
+            &format!("{},{},1,1", x, y),
+            "-t",
+            "bmp",
+            "-x",
+            tmp_path,
+        ])
+        .output()
+        .map_err(|e| format!("Falha ao executar screencapture: {}", e))?;
+
+    if !output.status.success() {
+        let stderr = String::from_utf8_lossy(&output.stderr);
+        return Err(format!("screencapture falhou: {}", stderr));
+    }
+
+    let data = std::fs::read(tmp_path).map_err(|e| format!("Falha ao ler arquivo BMP: {}", e))?;
+    let _ = std::fs::remove_file(tmp_path);
+
+    if data.len() < 30 {
+        return Err("Arquivo BMP inválido".to_string());
+    }
+
+    // BMP header: pixel data offset at bytes 10-13 (little-endian u32)
+    let offset = u32::from_le_bytes([data[10], data[11], data[12], data[13]]) as usize;
+    if data.len() < offset + 3 {
+        return Err("Dados de pixel BMP inválidos".to_string());
+    }
+
+    // BMP armazena pixels como BGR
+    let b = data[offset];
+    let g = data[offset + 1];
+    let r = data[offset + 2];
+
+    build_pixel_color(r, g, b)
+}
+
+// ---- Linux: Wayland (grim) ou X11 (x11rb) ----
+#[cfg(target_os = "linux")]
 fn is_wayland() -> bool {
     std::env::var("WAYLAND_DISPLAY").is_ok()
         || std::env::var("XDG_SESSION_TYPE")
@@ -505,8 +604,8 @@ fn is_wayland() -> bool {
             .unwrap_or(false)
 }
 
+#[cfg(target_os = "linux")]
 fn get_pixel_color_wayland(x: i32, y: i32) -> Result<PixelColor, String> {
-    // Use grim to capture a 1x1 region as PPM (raw pixel format)
     let output = Command::new("grim")
         .args(["-g", &format!("{},{} 1x1", x, y), "-t", "ppm", "-"])
         .output()
@@ -522,9 +621,8 @@ fn get_pixel_color_wayland(x: i32, y: i32) -> Result<PixelColor, String> {
         return Err(format!("grim falhou: {}", stderr));
     }
 
-    // Parse PPM format: "P6\n1 1\n255\n" followed by 3 bytes (RGB)
+    // Parse PPM (P6): "P6\n1 1\n255\n" seguido de 3 bytes RGB
     let data = &output.stdout;
-    // Find the end of the PPM header (3 newlines for P6 format)
     let mut newline_count = 0;
     let mut header_end = 0;
     for (i, &byte) in data.iter().enumerate() {
@@ -541,13 +639,10 @@ fn get_pixel_color_wayland(x: i32, y: i32) -> Result<PixelColor, String> {
         return Err("Formato PPM inválido".to_string());
     }
 
-    let r = data[header_end];
-    let g = data[header_end + 1];
-    let b = data[header_end + 2];
-
-    build_pixel_color(r, g, b)
+    build_pixel_color(data[header_end], data[header_end + 1], data[header_end + 2])
 }
 
+#[cfg(target_os = "linux")]
 fn get_pixel_color_x11(x: i32, y: i32) -> Result<PixelColor, String> {
     use x11rb::connection::Connection;
     use x11rb::protocol::xproto::{ConnectionExt, ImageFormat};
@@ -570,36 +665,21 @@ fn get_pixel_color_x11(x: i32, y: i32) -> Result<PixelColor, String> {
     }
 
     // X11 retorna formato BGR(A)
-    let b = data[0];
-    let g = data[1];
-    let r = data[2];
-
-    build_pixel_color(r, g, b)
+    build_pixel_color(data[2], data[1], data[0])
 }
 
-fn build_pixel_color(r: u8, g: u8, b: u8) -> Result<PixelColor, String> {
-    let hex = format!("#{:02X}{:02X}{:02X}", r, g, b);
-    let rgb_str = format!("rgb({}, {}, {})", r, g, b);
-    let (c, m, y_val, k) = rgb_to_cmyk(r, g, b);
-    let cmyk = format!("cmyk({:.0}%, {:.0}%, {:.0}%, {:.0}%)", c, m, y_val, k);
-
-    Ok(PixelColor {
-        r,
-        g,
-        b,
-        hex,
-        rgb: rgb_str,
-        cmyk,
-    })
-}
-
-#[tauri::command(rename_all = "camelCase")]
-fn get_pixel_color(x: i32, y: i32) -> Result<PixelColor, String> {
+#[cfg(target_os = "linux")]
+fn platform_get_pixel_color(x: i32, y: i32) -> Result<PixelColor, String> {
     if is_wayland() {
         get_pixel_color_wayland(x, y)
     } else {
         get_pixel_color_x11(x, y)
     }
+}
+
+#[tauri::command(rename_all = "camelCase")]
+fn get_pixel_color(x: i32, y: i32) -> Result<PixelColor, String> {
+    platform_get_pixel_color(x, y)
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
