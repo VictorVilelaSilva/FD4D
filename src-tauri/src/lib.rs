@@ -1,5 +1,202 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 use rand::Rng;
+use std::sync::{Arc, Mutex};
+use std::collections::HashMap;
+use axum::{
+    Router,
+    routing::{post, get},
+    extract::{State, Json},
+    http::{HeaderMap, StatusCode},
+};
+use tower_http::cors::CorsLayer;
+use serde::{Deserialize, Serialize};
+use once_cell::sync::Lazy;
+
+#[derive(Clone, Serialize, Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+pub struct WebhookRequest {
+    id: String,
+    timestamp: String,
+    method: String,
+    path: String,
+    headers: HashMap<String, String>,
+    body: String,
+    status_code: u16,
+    error_reason: Option<String>,
+}
+
+#[derive(Clone)]
+struct WebhookState {
+    requests: Arc<Mutex<Vec<WebhookRequest>>>,
+    auth_method: Arc<Mutex<String>>,
+    auth_value: Arc<Mutex<String>>,
+}
+
+static WEBHOOK_STATE: Lazy<WebhookState> = Lazy::new(|| WebhookState {
+    requests: Arc::new(Mutex::new(Vec::new())),
+    auth_method: Arc::new(Mutex::new(String::new())),
+    auth_value: Arc::new(Mutex::new(String::new())),
+});
+
+type ServerHandle = tokio::task::JoinHandle<()>;
+static SERVER_HANDLE: Lazy<Arc<Mutex<Option<ServerHandle>>>> = Lazy::new(|| Arc::new(Mutex::new(None)));
+
+async fn handle_webhook(
+    State(state): State<WebhookState>,
+    headers: HeaderMap,
+    body: String,
+) -> (StatusCode, Json<serde_json::Value>) {
+    let auth_method = state.auth_method.lock().unwrap().clone();
+    let auth_value = state.auth_value.lock().unwrap().clone();
+    
+    let mut status_code = 200;
+    let mut error_reason: Option<String> = None;
+    
+    // Verify authentication
+    if !auth_method.is_empty() && !auth_value.is_empty() {
+        let auth_valid = match auth_method.as_str() {
+            "bearer" => {
+                if let Some(auth_header) = headers.get("authorization") {
+                    if let Ok(value) = auth_header.to_str() {
+                        value == format!("Bearer {}", auth_value) || value == auth_value
+                    } else {
+                        false
+                    }
+                } else {
+                    false
+                }
+            },
+            "api-key" => {
+                if let Some(api_key) = headers.get("x-api-key") {
+                    if let Ok(value) = api_key.to_str() {
+                        value == auth_value
+                    } else {
+                        false
+                    }
+                } else {
+                    false
+                }
+            },
+            "basic" => {
+                if let Some(auth_header) = headers.get("authorization") {
+                    if let Ok(value) = auth_header.to_str() {
+                        value == format!("Basic {}", auth_value) || value == auth_value
+                    } else {
+                        false
+                    }
+                } else {
+                    false
+                }
+            },
+            _ => true,
+        };
+        
+        if !auth_valid {
+            status_code = 401;
+            error_reason = Some("Authentication failed: Invalid credentials".to_string());
+        }
+    }
+    
+    // Convert headers to HashMap
+    let headers_map: HashMap<String, String> = headers
+        .iter()
+        .map(|(k, v)| (k.to_string(), v.to_str().unwrap_or("").to_string()))
+        .collect();
+    
+    // Create request record
+    let request = WebhookRequest {
+        id: uuid::Uuid::new_v4().to_string(),
+        timestamp: chrono::Local::now().format("%Y-%m-%d %H:%M:%S").to_string(),
+        method: "POST".to_string(),
+        path: "/webhook".to_string(),
+        headers: headers_map,
+        body: body.clone(),
+        status_code,
+        error_reason: error_reason.clone(),
+    };
+    
+    // Store request
+    state.requests.lock().unwrap().push(request);
+    
+    // Return response
+    let response_body = if status_code == 200 {
+        serde_json::json!({
+            "success": true,
+            "message": "Webhook received successfully"
+        })
+    } else {
+        serde_json::json!({
+            "success": false,
+            "error": error_reason.unwrap_or_else(|| "Unknown error".to_string())
+        })
+    };
+    
+    (StatusCode::from_u16(status_code).unwrap(), Json(response_body))
+}
+
+async fn health_check() -> &'static str {
+    "Webhook server is running"
+}
+
+#[tauri::command(rename_all = "camelCase")]
+async fn start_webhook_server(port: u16, auth_method: String, auth_value: String) -> Result<String, String> {
+    // Check if server is already running
+    {
+        let handle_guard = SERVER_HANDLE.lock().unwrap();
+        if handle_guard.is_some() {
+            return Err("Server is already running".to_string());
+        }
+    }
+    
+    // Clear previous requests and update auth config
+    WEBHOOK_STATE.requests.lock().unwrap().clear();
+    *WEBHOOK_STATE.auth_method.lock().unwrap() = auth_method;
+    *WEBHOOK_STATE.auth_value.lock().unwrap() = auth_value;
+    
+    let app = Router::new()
+        .route("/webhook", post(handle_webhook))
+        .route("/health", get(health_check))
+        .layer(CorsLayer::permissive())
+        .with_state(WEBHOOK_STATE.clone());
+    
+    let addr = format!("0.0.0.0:{}", port);
+    let listener = match tokio::net::TcpListener::bind(&addr).await {
+        Ok(l) => l,
+        Err(e) => return Err(format!("Failed to bind to {}: {}", addr, e)),
+    };
+    
+    let handle = tokio::spawn(async move {
+        if let Err(e) = axum::serve(listener, app).await {
+            eprintln!("Server error: {}", e);
+        }
+    });
+    
+    // Store the handle
+    *SERVER_HANDLE.lock().unwrap() = Some(handle);
+    
+    Ok(format!("http://localhost:{}/webhook", port))
+}
+
+#[tauri::command]
+async fn stop_webhook_server() -> Result<(), String> {
+    let mut handle_guard = SERVER_HANDLE.lock().unwrap();
+    if let Some(handle) = handle_guard.take() {
+        handle.abort();
+        Ok(())
+    } else {
+        Err("No server is running".to_string())
+    }
+}
+
+#[tauri::command]
+fn get_webhook_requests() -> Vec<WebhookRequest> {
+    WEBHOOK_STATE.requests.lock().unwrap().clone()
+}
+
+#[tauri::command]
+fn clear_webhook_requests() {
+    WEBHOOK_STATE.requests.lock().unwrap().clear();
+}
 
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -203,7 +400,11 @@ pub fn run() {
             gerar_cpf,
             gerar_cnpj,
             validar_cpf,
-            validar_cnpj
+            validar_cnpj,
+            start_webhook_server,
+            stop_webhook_server,
+            get_webhook_requests,
+            clear_webhook_requests
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
