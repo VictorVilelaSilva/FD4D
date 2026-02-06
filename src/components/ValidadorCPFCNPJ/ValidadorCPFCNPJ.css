@@ -1,0 +1,226 @@
+/* ===================================
+   Validador CPF/CNPJ - Styles
+   =================================== */
+
+.validador .validador-input-group {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+}
+
+.validador .input-wrapper {
+    position: relative;
+    flex: 1;
+}
+
+.validador .validador-input {
+    width: 100%;
+    padding: var(--spacing-md) var(--spacing-lg);
+    padding-right: 2.5rem;
+    font-family: var(--font-mono);
+    font-size: clamp(1rem, 3vw, 1.25rem);
+    letter-spacing: 2px;
+    color: var(--font-primary);
+    background-color: rgba(13, 16, 22, 0.6);
+    border: 1px solid rgba(82, 54, 139, 0.3);
+    border-radius: var(--border-radius-md);
+    outline: none;
+    transition: border-color var(--transition-normal),
+        box-shadow var(--transition-normal);
+    box-sizing: border-box;
+}
+
+.validador .validador-input::placeholder {
+    color: var(--font-secondary);
+    opacity: 0.4;
+    letter-spacing: 2px;
+}
+
+.validador .validador-input:focus {
+    border-color: var(--bg-accent);
+    box-shadow: 0 0 0 2px rgba(140, 82, 255, 0.15);
+}
+
+.validador .validador-input.input-valido {
+    border-color: var(--font-success);
+    box-shadow: 0 0 0 2px rgba(39, 174, 96, 0.15);
+}
+
+.validador .validador-input.input-invalido {
+    border-color: var(--font-error);
+    box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.15);
+}
+
+/* Botão Limpar (X) dentro do input */
+.validador .btn-limpar {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: var(--font-secondary);
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.validador .btn-limpar:hover {
+    color: var(--font-primary);
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Botão Validar */
+.validador .btn-validar {
+    font-family: var(--font-heading) !important;
+    font-size: 0.95rem !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.02em;
+    min-width: 130px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.validador .btn-validar:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Resultado da validação */
+.validador .validador-resultado {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-radius: var(--border-radius-md);
+    border: 1px solid transparent;
+    animation: resultadoSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.validador .validador-resultado.valido {
+    background-color: rgba(39, 174, 96, 0.08);
+    border-color: rgba(39, 174, 96, 0.3);
+}
+
+.validador .validador-resultado.invalido,
+.validador .validador-resultado.erro {
+    background-color: rgba(231, 76, 60, 0.08);
+    border-color: rgba(231, 76, 60, 0.3);
+}
+
+.validador .resultado-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+}
+
+.validador .validador-resultado.valido .resultado-icon {
+    background-color: rgba(39, 174, 96, 0.15);
+    color: var(--font-success);
+}
+
+.validador .validador-resultado.invalido .resultado-icon,
+.validador .validador-resultado.erro .resultado-icon {
+    background-color: rgba(231, 76, 60, 0.15);
+    color: var(--font-error);
+}
+
+.validador .resultado-texto {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-md);
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.validador .validador-resultado.valido .resultado-texto {
+    color: var(--font-success);
+}
+
+.validador .validador-resultado.invalido .resultado-texto,
+.validador .validador-resultado.erro .resultado-texto {
+    color: var(--font-error);
+}
+
+/* Animação de entrada */
+@keyframes resultadoSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsividade telas grandes */
+@media (min-width: 1200px) {
+    .validador .validador-input {
+        font-size: 1.35rem;
+        padding: 1rem 1.5rem;
+        padding-right: 2.75rem;
+    }
+
+    .validador .btn-validar {
+        min-width: 160px;
+        font-size: 1.05rem !important;
+    }
+
+    .validador .resultado-texto {
+        font-size: 1.1rem;
+    }
+}
+
+/* Responsividade tablets */
+@media (max-width: 768px) {
+    .validador .validador-input-group {
+        flex-direction: column;
+    }
+
+    .validador .input-wrapper {
+        width: 100%;
+    }
+
+    .validador .btn-validar {
+        width: 100%;
+    }
+
+    .validador .validador-resultado {
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+}
+
+/* Responsividade mobile */
+@media (max-width: 480px) {
+    .validador .validador-input {
+        font-size: 0.95rem;
+        padding: 0.75rem 1rem;
+        padding-right: 2.25rem;
+    }
+
+    .validador .btn-validar {
+        font-size: 0.85rem !important;
+    }
+
+    .validador .resultado-icon {
+        width: 30px;
+        height: 30px;
+    }
+
+    .validador .resultado-icon svg {
+        width: 18px;
+        height: 18px;
+    }
+}

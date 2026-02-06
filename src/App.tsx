@@ -4,6 +4,7 @@ import ColorPicker from "./components/ColorPicker";
 import "./App.css";
 import DockNav from "./components/Dock/Dock";
 import GeradorCPFCNPJ from "./components/CPFGenerator/GeradorCPFCNPJ";
+import ValidadorCPFCNPJ from "./components/ValidadorCPFCNPJ/ValidadorCPFCNPJ";
 import { RetroGrid } from "./components/ui/retro-grid";
 import { DotPattern } from "./components/ui/dot-pattern";
 import { AuroraText } from "./components/ui/aurora-text";
@@ -62,6 +63,7 @@ function App() {
           </div>
         )}
         {ferramentaAtiva === "cpf/cnpj" && <GeradorCPFCNPJ />}
+        {ferramentaAtiva === "validador" && <ValidadorCPFCNPJ />}
         {ferramentaAtiva === "webhook" && <Webhook />}
         {ferramentaAtiva === "colorpicker" && <ColorPicker />}
       </main>

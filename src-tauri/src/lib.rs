@@ -111,11 +111,100 @@ fn gerar_cnpj(com_mascara: bool) -> String {
     }
 }
 
+#[tauri::command(rename_all = "camelCase")]
+fn validar_cpf(cpf_input: &str) -> Result<bool, String> {
+    // Remove caracteres não numéricos
+    let digits: Vec<u32> = cpf_input
+        .chars()
+        .filter(|c| c.is_ascii_digit())
+        .filter_map(|c| c.to_digit(10))
+        .collect();
+
+    if digits.len() != 11 {
+        return Err("CPF deve conter exatamente 11 dígitos".into());
+    }
+
+    // Verifica se todos os dígitos são iguais (ex: 111.111.111-11)
+    if digits.windows(2).all(|w| w[0] == w[1]) {
+        return Ok(false);
+    }
+
+    // Validação do primeiro dígito verificador
+    let first_digit = calculate_digit(&digits[..9], 10);
+    if first_digit != digits[9] {
+        return Ok(false);
+    }
+
+    // Validação do segundo dígito verificador
+    let second_digit = calculate_digit(&digits[..10], 11);
+    if second_digit != digits[10] {
+        return Ok(false);
+    }
+
+    Ok(true)
+}
+
+#[tauri::command(rename_all = "camelCase")]
+fn validar_cnpj(cnpj_input: &str) -> Result<bool, String> {
+    // Remove caracteres não numéricos
+    let digits: Vec<u32> = cnpj_input
+        .chars()
+        .filter(|c| c.is_ascii_digit())
+        .filter_map(|c| c.to_digit(10))
+        .collect();
+
+    if digits.len() != 14 {
+        return Err("CNPJ deve conter exatamente 14 dígitos".into());
+    }
+
+    // Verifica se todos os dígitos são iguais
+    if digits.windows(2).all(|w| w[0] == w[1]) {
+        return Ok(false);
+    }
+
+    let first_weights: [u32; 12] = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+    let second_weights: [u32; 13] = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+
+    // Primeiro dígito verificador
+    let sum: u32 = digits[..12]
+        .iter()
+        .zip(first_weights.iter())
+        .map(|(&d, &w)| d * w)
+        .sum();
+    let rest = sum % 11;
+    let first_digit = if rest < 2 { 0 } else { 11 - rest };
+
+    if first_digit != digits[12] {
+        return Ok(false);
+    }
+
+    // Segundo dígito verificador
+    let sum: u32 = digits[..13]
+        .iter()
+        .zip(second_weights.iter())
+        .map(|(&d, &w)| d * w)
+        .sum();
+    let rest = sum % 11;
+    let second_digit = if rest < 2 { 0 } else { 11 - rest };
+
+    if second_digit != digits[13] {
+        return Ok(false);
+    }
+
+    Ok(true)
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![greet, gerar_cpf, gerar_cnpj])
+        .invoke_handler(tauri::generate_handler![
+            greet,
+            gerar_cpf,
+            gerar_cnpj,
+            validar_cpf,
+            validar_cnpj
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

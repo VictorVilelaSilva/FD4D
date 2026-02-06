@@ -149,16 +149,16 @@ function GeradorCPFCNPJ() {
         <BorderBeam
           size={80}
           duration={8}
-          delay={3}
           colorFrom="#8c52ff"
           colorTo="#a855f7"
           borderWidth={1}
         />
         <h1>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="inline-icon">
-            <path d="M4 7V4h16v3" />
-            <path d="M9 20h6" />
-            <path d="M12 4v16" />
+            <rect x="2" y="3" width="20" height="18" rx="2" />
+            <path d="M9 7h6" />
+            <path d="M9 11h6" />
+            <path d="M9 15h4" />
           </svg>
           Gerador de CNPJ
         </h1>
