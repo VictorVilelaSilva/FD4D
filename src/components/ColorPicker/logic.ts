@@ -9,6 +9,18 @@ export interface PixelColor {
     cmyk: string;
 }
 
+/**
+ * Invoca o seletor de cor nativo do sistema via portal XDG (Wayland)
+ * com fallback para hyprpicker.
+ */
+export async function pickColorFromScreen(): Promise<PixelColor> {
+    return invoke<PixelColor>("pick_color_portal");
+}
+
+/**
+ * Captura cor por coordenada de pixel (funciona apenas em X11/Windows/macOS).
+ * @deprecated Use pickColorFromScreen() para compatibilidade com Wayland.
+ */
 export async function getPixelColor(x: number, y: number): Promise<PixelColor> {
     return invoke<PixelColor>("get_pixel_color", { x: Math.round(x), y: Math.round(y) });
 }

@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState } from "react";
 import { BorderBeam } from "../ui/border-beam";
 import { MagicCard } from "../ui/magic-card";
 import { BlurFade } from "../ui/blur-fade";
 import { ShimmerButton } from "../ui/shimmer-button";
-import { getPixelColor, copiarParaClipboard, getContrastColor, PixelColor } from "./logic";
+import { pickColorFromScreen, copiarParaClipboard, getContrastColor, PixelColor } from "./logic";
 import "./ColorPicker.css";
 
 const IconePipeta = () => (
@@ -77,57 +77,23 @@ function ColorValueRow({ label, value, placeholder, copiado, onCopy }: ColorValu
 function ColorPicker() {
     const [cor, setCor] = useState<PixelColor | null>(null);
     const [picking, setPicking] = useState(false);
+    const [erro, setErro] = useState<string | null>(null);
     const [copiadoHex, setCopiadoHex] = useState(false);
     const [copiadoRgb, setCopiadoRgb] = useState(false);
     const [copiadoCmyk, setCopiadoCmyk] = useState(false);
-    const pickingRef = useRef(false);
-    const throttleRef = useRef(false);
 
-    const handlePickColor = useCallback(async (e: MouseEvent) => {
-        if (!pickingRef.current || throttleRef.current) return;
-
-        throttleRef.current = true;
-        setTimeout(() => { throttleRef.current = false; }, 100);
-
+    async function handlePickColor() {
+        setPicking(true);
+        setErro(null);
         try {
-            const color = await getPixelColor(e.screenX, e.screenY);
+            const color = await pickColorFromScreen();
             setCor(color);
         } catch (error) {
             console.error("Erro ao capturar cor:", error);
-        }
-    }, []);
-
-    const handleKeyDown = useCallback((e: KeyboardEvent) => {
-        if (e.key === "Escape" && pickingRef.current) {
-            pickingRef.current = false;
+            setErro(String(error));
+        } finally {
             setPicking(false);
         }
-    }, []);
-
-    const handleClick = useCallback((e: MouseEvent) => {
-        if (pickingRef.current) {
-            e.preventDefault();
-            pickingRef.current = false;
-            setPicking(false);
-        }
-    }, []);
-
-    useEffect(() => {
-        if (picking) {
-            window.addEventListener("mousemove", handlePickColor);
-            window.addEventListener("keydown", handleKeyDown);
-            window.addEventListener("click", handleClick);
-        }
-        return () => {
-            window.removeEventListener("mousemove", handlePickColor);
-            window.removeEventListener("keydown", handleKeyDown);
-            window.removeEventListener("click", handleClick);
-        };
-    }, [picking, handlePickColor, handleKeyDown, handleClick]);
-
-    function startPicking() {
-        pickingRef.current = true;
-        setPicking(true);
     }
 
     async function handleCopy(value: string, tipo: "hex" | "rgb" | "cmyk") {
@@ -177,15 +143,17 @@ function ColorPicker() {
                                 background={picking ? "#27ae60" : "var(--bg-accent)"}
                                 borderRadius="8px"
                                 className="btn-gerar"
-                                onClick={startPicking}
+                                onClick={handlePickColor}
                                 disabled={picking}
                             >
-                                {picking ? "Capturando... (clique para parar)" : "Iniciar Captura"}
+                                {picking ? "Selecionando..." : "Capturar Cor da Tela"}
                             </ShimmerButton>
 
-                            <div className={`picker-status ${picking ? "active" : "inactive"}`}>
-                                <span>{picking ? "🎯 Mova o mouse para capturar cores" : "⏸️ Captura pausada"}</span>
-                            </div>
+                            {erro && (
+                                <div className="picker-status active" style={{ borderColor: "#e74c3c", color: "#e74c3c", background: "rgba(231,76,60,0.1)" }}>
+                                    <span>❌ {erro}</span>
+                                </div>
+                            )}
                         </div>
 
                         <div className="color-values-section">
@@ -215,15 +183,15 @@ function ColorPicker() {
                         <div className="picker-instructions">
                             <div className="instruction-item">
                                 <IconeInfo />
-                                <span>Clique em <strong>"Iniciar Captura"</strong> para começar</span>
+                                <span>Clique em <strong>"Capturar Cor da Tela"</strong> para abrir o seletor</span>
                             </div>
                             <div className="instruction-item">
                                 <IconeInfo />
-                                <span>Mova o mouse pela tela para ver as cores</span>
+                                <span>O seletor nativo do sistema será aberto</span>
                             </div>
                             <div className="instruction-item">
                                 <IconeInfo />
-                                <span>Pressione <span className="instruction-key">ESC</span> ou clique para parar</span>
+                                <span>Clique em qualquer pixel da tela para capturar a cor</span>
                             </div>
                         </div>
                     </div>

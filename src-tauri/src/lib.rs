@@ -595,7 +595,8 @@ fn platform_get_pixel_color(x: i32, y: i32) -> Result<PixelColor, String> {
     build_pixel_color(r, g, b)
 }
 
-// ---- Linux: Wayland (grim) ou X11 (x11rb) ----
+// ---- Linux: Portal XDG (ashpd) com fallback para hyprpicker ----
+
 #[cfg(target_os = "linux")]
 fn is_wayland() -> bool {
     std::env::var("WAYLAND_DISPLAY").is_ok()
@@ -604,44 +605,62 @@ fn is_wayland() -> bool {
             .unwrap_or(false)
 }
 
+/// Tenta capturar cor via XDG Desktop Portal (ashpd) - funciona em Wayland
 #[cfg(target_os = "linux")]
-fn get_pixel_color_wayland(x: i32, y: i32) -> Result<PixelColor, String> {
-    let output = Command::new("grim")
-        .args(["-g", &format!("{},{} 1x1", x, y), "-t", "ppm", "-"])
+async fn pick_color_via_portal() -> Result<PixelColor, String> {
+    use ashpd::desktop::Color;
+
+    let response = Color::pick()
+        .send()
+        .await
+        .map_err(|e| format!("Erro ao invocar portal de cor: {}", e))?
+        .response()
+        .map_err(|e| format!("Seleção cancelada ou falhou: {}", e))?;
+
+    let r = (response.red() * 255.0).round() as u8;
+    let g = (response.green() * 255.0).round() as u8;
+    let b = (response.blue() * 255.0).round() as u8;
+
+    build_pixel_color(r, g, b)
+}
+
+/// Fallback: usa hyprpicker (CLI nativa do Hyprland)
+#[cfg(target_os = "linux")]
+fn pick_color_via_hyprpicker() -> Result<PixelColor, String> {
+    let output = Command::new("hyprpicker")
+        .args(["-a", "-f", "hex"])
         .output()
         .map_err(|e| {
             format!(
-                "Falha ao executar grim: {}. Instale com: sudo dnf install grim",
+                "Falha ao executar hyprpicker: {}. Instale com: sudo dnf install hyprpicker",
                 e
             )
         })?;
 
     if !output.status.success() {
         let stderr = String::from_utf8_lossy(&output.stderr);
-        return Err(format!("grim falhou: {}", stderr));
+        return Err(format!("hyprpicker falhou: {}", stderr));
     }
 
-    // Parse PPM (P6): "P6\n1 1\n255\n" seguido de 3 bytes RGB
-    let data = &output.stdout;
-    let mut newline_count = 0;
-    let mut header_end = 0;
-    for (i, &byte) in data.iter().enumerate() {
-        if byte == b'\n' {
-            newline_count += 1;
-            if newline_count == 3 {
-                header_end = i + 1;
-                break;
-            }
-        }
+    let hex_str = String::from_utf8_lossy(&output.stdout).trim().to_string();
+
+    // Parse hex (#RRGGBB ou RRGGBB)
+    let hex_clean = hex_str.trim_start_matches('#');
+    if hex_clean.len() < 6 {
+        return Err(format!("Formato hex inválido do hyprpicker: {}", hex_str));
     }
 
-    if header_end == 0 || data.len() < header_end + 3 {
-        return Err("Formato PPM inválido".to_string());
-    }
+    let r = u8::from_str_radix(&hex_clean[0..2], 16)
+        .map_err(|e| format!("Erro ao parsear R: {}", e))?;
+    let g = u8::from_str_radix(&hex_clean[2..4], 16)
+        .map_err(|e| format!("Erro ao parsear G: {}", e))?;
+    let b = u8::from_str_radix(&hex_clean[4..6], 16)
+        .map_err(|e| format!("Erro ao parsear B: {}", e))?;
 
-    build_pixel_color(data[header_end], data[header_end + 1], data[header_end + 2])
+    build_pixel_color(r, g, b)
 }
 
+/// Captura cor via X11 em coordenada específica
 #[cfg(target_os = "linux")]
 fn get_pixel_color_x11(x: i32, y: i32) -> Result<PixelColor, String> {
     use x11rb::connection::Connection;
@@ -668,10 +687,11 @@ fn get_pixel_color_x11(x: i32, y: i32) -> Result<PixelColor, String> {
     build_pixel_color(data[2], data[1], data[0])
 }
 
+/// Comando legado: captura pixel por coordenada (funciona apenas em X11)
 #[cfg(target_os = "linux")]
 fn platform_get_pixel_color(x: i32, y: i32) -> Result<PixelColor, String> {
     if is_wayland() {
-        get_pixel_color_wayland(x, y)
+        Err("Captura por coordenada não suportada no Wayland. Use pick_color_portal.".to_string())
     } else {
         get_pixel_color_x11(x, y)
     }
@@ -680,6 +700,41 @@ fn platform_get_pixel_color(x: i32, y: i32) -> Result<PixelColor, String> {
 #[tauri::command(rename_all = "camelCase")]
 fn get_pixel_color(x: i32, y: i32) -> Result<PixelColor, String> {
     platform_get_pixel_color(x, y)
+}
+
+/// Comando principal para selecionar cor: usa portal XDG no Wayland, fallback para hyprpicker
+#[cfg(target_os = "linux")]
+#[tauri::command(rename_all = "camelCase")]
+async fn pick_color_portal() -> Result<PixelColor, String> {
+    // Tenta via portal XDG primeiro (funciona em GNOME, KDE, Hyprland com xdg-desktop-portal)
+    match pick_color_via_portal().await {
+        Ok(color) => return Ok(color),
+        Err(portal_err) => {
+            eprintln!("Portal falhou: {}. Tentando hyprpicker...", portal_err);
+        }
+    }
+
+    // Fallback: hyprpicker (específico Hyprland)
+    match pick_color_via_hyprpicker() {
+        Ok(color) => Ok(color),
+        Err(hyprpicker_err) => Err(format!(
+            "Nenhum método de captura disponível.\n\
+                 Portal XDG: verifique se xdg-desktop-portal-hyprland está instalado e rodando.\n\
+                 hyprpicker: {}.\n\
+                 Instale com: sudo dnf install xdg-desktop-portal-hyprland hyprpicker",
+            hyprpicker_err
+        )),
+    }
+}
+
+/// Versões Windows/macOS do pick_color_portal não usam portal, usam captura direta
+#[cfg(not(target_os = "linux"))]
+#[tauri::command(rename_all = "camelCase")]
+async fn pick_color_portal() -> Result<PixelColor, String> {
+    Err(
+        "pick_color_portal só é suportado no Linux. Use get_pixel_color no Windows/macOS."
+            .to_string(),
+    )
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -697,7 +752,8 @@ pub fn run() {
             get_webhook_requests,
             clear_webhook_requests,
             send_webhook_request,
-            get_pixel_color
+            get_pixel_color,
+            pick_color_portal
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
