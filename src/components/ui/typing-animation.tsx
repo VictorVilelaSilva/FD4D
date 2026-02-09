@@ -137,10 +137,7 @@ export function TypingAnimation({
     currentCharIndex >= currentWordGraphemes.length &&
     phase !== "deleting"
 
-  const shouldShowCursor =
-    showCursor &&
-    !isComplete &&
-    (hasMultipleWords || loop || currentCharIndex < currentWordGraphemes.length)
+  const shouldShowCursor = showCursor
 
   const getCursorChar = () => {
     switch (cursorStyle) {
