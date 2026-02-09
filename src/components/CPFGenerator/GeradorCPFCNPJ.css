@@ -1,0 +1,230 @@
+.ferramenta {
+  position: relative;
+  width: 100%;
+  max-width: 800px;
+  min-width: 400px;
+  padding: var(--spacing-xl);
+  background-color: var(--card-bg);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid rgba(82, 54, 139, 0.3);
+  overflow: hidden;
+}
+
+.ferramenta h1 {
+  margin-top: 0;
+  margin-bottom: var(--spacing-xs);
+  color: var(--font-primary);
+  font-family: var(--font-heading);
+  font-size: clamp(1.3rem, 3vw, 1.6rem);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.inline-icon {
+  flex-shrink: 0;
+  color: var(--bg-accent);
+}
+
+.opcoes {
+  margin: var(--spacing-lg) 0;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  cursor: pointer;
+  font-size: 1rem;
+  font-family: var(--font-mono);
+  color: var(--font-secondary);
+  flex-wrap: wrap;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  flex-shrink: 0;
+  accent-color: var(--bg-accent);
+}
+
+.btn-gerar {
+  font-family: var(--font-heading) !important;
+  font-size: 0.95rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.02em;
+  min-width: 180px;
+}
+
+/* Container do resultado */
+.resultado-container {
+  margin-top: var(--spacing-lg);
+  opacity: 0.5;
+  transition: opacity var(--transition-slow);
+}
+
+.resultado-container.visivel {
+  opacity: 1;
+}
+
+.resultado {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-lg);
+  background: linear-gradient(135deg, rgba(45, 45, 48, 0.5) 0%, rgba(28, 28, 30, 0.8) 100%);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid rgba(82, 54, 139, 0.2);
+}
+
+.resultado-label {
+  color: var(--font-secondary);
+  font-size: var(--font-size-xs);
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 500;
+}
+
+.resultado-valor {
+  font-size: clamp(1.5rem, 5vw, 2.25rem);
+  font-weight: bold;
+  color: var(--font-accent);
+  font-family: var(--font-mono);
+  letter-spacing: 2px;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: rgba(13, 16, 22, 0.6);
+  border-radius: var(--border-radius-md);
+  text-align: center;
+  user-select: all;
+  min-height: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.typing-value {
+  font-size: inherit !important;
+  font-family: inherit !important;
+  font-weight: inherit !important;
+  letter-spacing: inherit !important;
+  color: inherit !important;
+  line-height: normal !important;
+  tracking: inherit !important;
+}
+
+.placeholder-value {
+  color: var(--font-secondary);
+  opacity: 0.4;
+}
+
+.btn-copiar {
+  align-self: flex-end;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: transparent;
+  color: var(--font-primary);
+  border: 1px solid rgba(82, 54, 139, 0.4);
+  padding: var(--spacing-xs) var(--spacing-md);
+  font-size: var(--font-size-sm);
+  font-family: var(--font-mono);
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.btn-copiar:hover:not(:disabled) {
+  background-color: rgba(140, 82, 255, 0.15);
+  border-color: var(--bg-accent);
+  color: var(--font-primary);
+}
+
+.btn-copiar:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.btn-copiar.copiado {
+  background-color: rgba(39, 174, 96, 0.15);
+  border-color: var(--font-success);
+  color: var(--font-success);
+}
+
+/* Responsividade para telas grandes */
+@media (min-width: 1200px) {
+  .ferramenta {
+    max-width: 900px;
+    padding: 3rem;
+  }
+
+  .ferramenta h1 {
+    font-size: 1.75rem;
+  }
+
+  .checkbox-label {
+    font-size: 1.1rem;
+  }
+
+  .btn-gerar {
+    min-width: 220px;
+    font-size: 1.05rem !important;
+  }
+
+  .resultado-valor {
+    font-size: 2.5rem;
+  }
+
+  .btn-copiar {
+    font-size: 0.95rem;
+    padding: 0.6rem 1.25rem;
+  }
+}
+
+/* Responsividade para tablets */
+@media (max-width: 768px) {
+  .ferramenta {
+    padding: 1.5rem;
+    max-width: 100%;
+    min-width: auto;
+  }
+
+  .opcoes {
+    margin: 1rem 0;
+  }
+
+  .btn-gerar {
+    width: 100%;
+  }
+
+  .resultado {
+    padding: 1rem;
+  }
+
+  .btn-copiar {
+    align-self: stretch;
+    justify-content: center;
+  }
+}
+
+/* Responsividade para mobile */
+@media (max-width: 480px) {
+  .ferramenta {
+    padding: 1rem;
+  }
+
+  .checkbox-label {
+    font-size: 0.85rem;
+  }
+
+  .btn-gerar {
+    font-size: 0.85rem !important;
+  }
+
+  .resultado {
+    margin-top: 1.5rem;
+    padding: 0.75rem;
+  }
+}
