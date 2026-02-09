@@ -58,7 +58,7 @@ function App() {
                   speed={2}
                 >
                   4
-                </AuroraText>ṕ
+                </AuroraText>
                 DEVS
               </span>
             </div>
