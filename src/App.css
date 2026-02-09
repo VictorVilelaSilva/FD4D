@@ -81,6 +81,29 @@
   position: relative;
 }
 
+/* Subtítulo animado */
+.home-subtitle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: clamp(1rem, 2.5vw, 1.35rem);
+  font-weight: 300;
+  color: var(--font-secondary);
+  letter-spacing: 0.03em;
+  margin-top: var(--spacing-lg);
+  text-align: center;
+  line-height: 1.6;
+}
+
+.home-subtitle-typing {
+  font-weight: 500;
+  background: linear-gradient(135deg, #8c52ff, #a855f7, #c084fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+}
+
 /* Decoração adicional */
 .brand-decoration {
   position: absolute;

@@ -9,6 +9,8 @@ import { RetroGrid } from "./components/ui/retro-grid";
 import { DotPattern } from "./components/ui/dot-pattern";
 import { AuroraText } from "./components/ui/aurora-text";
 import { SparklesText } from "./components/ui/sparkles-text";
+import { BlurFade } from "./components/ui/blur-fade";
+import { TypingAnimation } from "./components/ui/typing-animation";
 
 function App() {
   const [ferramentaAtiva, setFerramentaAtiva] = useState("home");
@@ -56,10 +58,28 @@ function App() {
                   speed={2}
                 >
                   4
-                </AuroraText>
+                </AuroraText>ṕ
                 DEVS
               </span>
             </div>
+
+            <BlurFade delay={0.3} duration={0.6} direction="up">
+              <p className="home-subtitle">
+                Uma ferramenta feita{" "}
+                <TypingAnimation
+                  className="home-subtitle-typing"
+                  words={["por um desenvolvedor.", "para desenvolvedores."]}
+                  typeSpeed={80}
+                  deleteSpeed={50}
+                  pauseDelay={2000}
+                  delay={800}
+                  loop
+                  showCursor
+                  cursorStyle="line"
+                  cursorColor="var(--bg-accent)"
+                />
+              </p>
+            </BlurFade>
           </div>
         )}
         {ferramentaAtiva === "cpf/cnpj" && <GeradorCPFCNPJ />}

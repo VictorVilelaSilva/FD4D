@@ -19,7 +19,8 @@ interface TypingAnimationProps extends MotionProps {
   startOnView?: boolean
   showCursor?: boolean
   blinkCursor?: boolean
-  cursorStyle?: "line" | "block" | "underscore"
+  cursorStyle?: "line" | "block" | "underscore",
+  cursorColor?: string
 }
 
 export function TypingAnimation({
@@ -37,6 +38,7 @@ export function TypingAnimation({
   showCursor = true,
   blinkCursor = true,
   cursorStyle = "line",
+  cursorColor = "var(--font-accent)",
   ...props
 }: TypingAnimationProps) {
   const MotionComponent = motion.create(Component, {
@@ -137,10 +139,7 @@ export function TypingAnimation({
     currentCharIndex >= currentWordGraphemes.length &&
     phase !== "deleting"
 
-  const shouldShowCursor =
-    showCursor &&
-    !isComplete &&
-    (hasMultipleWords || loop || currentCharIndex < currentWordGraphemes.length)
+  const shouldShowCursor = showCursor
 
   const getCursorChar = () => {
     switch (cursorStyle) {
@@ -164,6 +163,10 @@ export function TypingAnimation({
       {shouldShowCursor && (
         <span
           className={cn("inline-block", blinkCursor && "animate-blink-cursor")}
+          style={{
+            WebkitTextFillColor: "currentcolor",
+            color: cursorColor
+          }}
         >
           {getCursorChar()}
         </span>
