@@ -58,7 +58,7 @@ function App() {
                   speed={2}
                 >
                   4
-                </AuroraText>
+                </AuroraText>ṕ
                 DEVS
               </span>
             </div>
@@ -76,6 +76,7 @@ function App() {
                   loop
                   showCursor
                   cursorStyle="line"
+                  cursorColor="var(--bg-accent)"
                 />
               </p>
             </BlurFade>
