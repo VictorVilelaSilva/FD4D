@@ -21,8 +21,8 @@ function App() {
       {isHome ? (
         <RetroGrid
           className="opacity-30"
-          angle={65}
-          cellSize={50}
+          angle={30}
+          cellSize={150}
           opacity={0.3}
           darkLineColor="rgba(140, 82, 255, 0.25)"
           lightLineColor="rgba(140, 82, 255, 0.15)"
