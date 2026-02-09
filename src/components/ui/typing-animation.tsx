@@ -161,6 +161,10 @@ export function TypingAnimation({
       {shouldShowCursor && (
         <span
           className={cn("inline-block", blinkCursor && "animate-blink-cursor")}
+          style={{
+            WebkitTextFillColor: "currentcolor",
+            color: "var(--bg-accent)",
+          }}
         >
           {getCursorChar()}
         </span>

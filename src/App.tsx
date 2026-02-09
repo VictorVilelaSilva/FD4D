@@ -75,7 +75,7 @@ function App() {
                   delay={800}
                   loop
                   showCursor
-                  cursorStyle="underscore"
+                  cursorStyle="line"
                 />
               </p>
             </BlurFade>
