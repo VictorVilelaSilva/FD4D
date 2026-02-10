@@ -130,14 +130,6 @@ export function TypingAnimation({
     delay,
   ])
 
-  const currentWordGraphemes = Array.from(
-    wordsToAnimate[currentWordIndex] || ""
-  )
-  const isComplete =
-    !loop &&
-    currentWordIndex === wordsToAnimate.length - 1 &&
-    currentCharIndex >= currentWordGraphemes.length &&
-    phase !== "deleting"
 
   const shouldShowCursor = showCursor
 
