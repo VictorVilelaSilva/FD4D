@@ -47,7 +47,8 @@ jobs:
             libssl-dev \
             libgtk-3-dev \
             libsoup-3.0-dev \
-            javascriptcoregtk-4.1-dev
+            javascriptcoregtk-4.1-dev \
+            rpm
 
       # ── Node.js ──
       - name: Setup Node.js
@@ -85,7 +86,7 @@ jobs:
             | Plataforma | Arquivo |
             |-----------|---------|
             | Windows   | `.msi` / `.exe` |
-            | Linux     | `.deb` / `.AppImage` |
+            | Linux     | `.deb` / `.rpm` / `.AppImage` |
             | macOS     | `.dmg` |
           releaseDraft: true
           prerelease: false
