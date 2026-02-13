@@ -47,35 +47,231 @@ fn build_pixel_color(r: u8, g: u8, b: u8) -> Result<PixelColor, String> {
     })
 }
 
-// ---- Windows: Win32 API (GetDC + GetPixel) ----
+// ---- Windows: Win32 API com mouse hook interativo (baseado em wcolor) ----
 #[cfg(target_os = "windows")]
-fn platform_get_pixel_color(x: i32, y: i32) -> Result<PixelColor, String> {
-    use std::ptr;
+#[allow(non_snake_case, non_camel_case_types, dead_code)]
+mod win_ffi {
+    use std::ffi::c_void;
+
+    pub type WPARAM = usize;
+    pub type LPARAM = isize;
+    pub type LRESULT = isize;
+
+    pub const WH_MOUSE_LL: i32 = 14;
+    pub const WM_LBUTTONDOWN: u32 = 0x0201;
+
+    pub const IDC_CROSS: *const u16 = 32515 as *const u16;
+    pub const OCR_NORMAL: u32 = 32512;
+    pub const OCR_IBEAM: u32 = 32513;
+    pub const OCR_HAND: u32 = 32649;
+    pub const OCR_APPSTARTING: u32 = 32650;
+    pub const OCR_SIZEALL: u32 = 32646;
+    pub const OCR_SIZENESW: u32 = 32643;
+    pub const OCR_SIZENS: u32 = 32645;
+    pub const OCR_SIZENWSE: u32 = 32642;
+    pub const OCR_SIZEWE: u32 = 32644;
+    pub const SPI_SETCURSORS: u32 = 0x0057;
+
+    #[repr(C)]
+    pub struct POINT {
+        pub x: i32,
+        pub y: i32,
+    }
+
+    impl Default for POINT {
+        fn default() -> Self {
+            POINT { x: 0, y: 0 }
+        }
+    }
+
+    #[repr(C)]
+    pub struct MSG {
+        pub hwnd: *mut c_void,
+        pub message: u32,
+        pub wParam: WPARAM,
+        pub lParam: LPARAM,
+        pub time: u32,
+        pub pt: POINT,
+    }
+
+    impl Default for MSG {
+        fn default() -> Self {
+            unsafe { std::mem::zeroed() }
+        }
+    }
+
+    pub type HOOKPROC = Option<unsafe extern "system" fn(i32, WPARAM, LPARAM) -> LRESULT>;
 
     #[link(name = "user32")]
     extern "system" {
-        fn GetDC(hWnd: *mut std::ffi::c_void) -> *mut std::ffi::c_void;
-        fn ReleaseDC(hWnd: *mut std::ffi::c_void, hDC: *mut std::ffi::c_void) -> i32;
+        pub fn GetDC(hWnd: *mut c_void) -> *mut c_void;
+        pub fn ReleaseDC(hWnd: *mut c_void, hDC: *mut c_void) -> i32;
+        pub fn SetWindowsHookExW(
+            idHook: i32,
+            lpfn: HOOKPROC,
+            hmod: *mut c_void,
+            dwThreadId: u32,
+        ) -> *mut c_void;
+        pub fn UnhookWindowsHookEx(hhk: *mut c_void) -> i32;
+        pub fn CallNextHookEx(
+            hhk: *mut c_void,
+            nCode: i32,
+            wParam: WPARAM,
+            lParam: LPARAM,
+        ) -> LRESULT;
+        pub fn GetMessageW(
+            lpMsg: *mut MSG,
+            hWnd: *mut c_void,
+            wMsgFilterMin: u32,
+            wMsgFilterMax: u32,
+        ) -> i32;
+        pub fn PostQuitMessage(nExitCode: i32);
+        pub fn GetCursorPos(lpPoint: *mut POINT) -> i32;
+        pub fn LoadCursorW(hInstance: *mut c_void, lpCursorName: *const u16) -> *mut c_void;
+        pub fn SetSystemCursor(hcur: *mut c_void, id: u32) -> i32;
+        pub fn CopyIcon(hIcon: *mut c_void) -> *mut c_void;
+        pub fn SystemParametersInfoW(
+            uiAction: u32,
+            uiParam: u32,
+            pvParam: *mut c_void,
+            fWinIni: u32,
+        ) -> i32;
     }
 
     #[link(name = "gdi32")]
     extern "system" {
-        fn GetPixel(hdc: *mut std::ffi::c_void, x: i32, y: i32) -> u32;
+        pub fn GetPixel(hdc: *mut c_void, x: i32, y: i32) -> u32;
+    }
+}
+
+/// Callback do mouse hook global - intercepta clique esquerdo para capturar cor
+#[cfg(target_os = "windows")]
+unsafe extern "system" fn low_mouse_proc(
+    code: i32,
+    w_param: win_ffi::WPARAM,
+    l_param: win_ffi::LPARAM,
+) -> win_ffi::LRESULT {
+    if code < 0 {
+        return win_ffi::CallNextHookEx(std::ptr::null_mut(), code, w_param, l_param);
     }
 
+    if w_param as u32 == win_ffi::WM_LBUTTONDOWN {
+        win_ffi::PostQuitMessage(0);
+        return -1; // Engole o clique para não interagir com janelas
+    }
+
+    win_ffi::CallNextHookEx(std::ptr::null_mut(), code, w_param, l_param)
+}
+
+#[cfg(target_os = "windows")]
+fn platform_get_pixel_color(x: i32, y: i32) -> Result<PixelColor, String> {
     unsafe {
-        let hdc = GetDC(ptr::null_mut());
+        let hdc = win_ffi::GetDC(std::ptr::null_mut());
         if hdc.is_null() {
             return Err("Falha ao obter Device Context da tela".to_string());
         }
 
-        let color = GetPixel(hdc, x, y);
-        ReleaseDC(ptr::null_mut(), hdc);
+        let color = win_ffi::GetPixel(hdc, x, y);
+        win_ffi::ReleaseDC(std::ptr::null_mut(), hdc);
 
         if color == 0xFFFFFFFF {
             return Err("Falha ao capturar pixel (coordenada fora da tela)".to_string());
         }
 
+        let r = (color & 0xFF) as u8;
+        let g = ((color >> 8) & 0xFF) as u8;
+        let b = ((color >> 16) & 0xFF) as u8;
+
+        build_pixel_color(r, g, b)
+    }
+}
+
+#[cfg(target_os = "windows")]
+fn set_all_cursors_to_cross() {
+    unsafe {
+        let cross = win_ffi::LoadCursorW(std::ptr::null_mut(), win_ffi::IDC_CROSS);
+        if cross.is_null() {
+            return;
+        }
+        let cursor_ids = [
+            win_ffi::OCR_NORMAL,
+            win_ffi::OCR_IBEAM,
+            win_ffi::OCR_HAND,
+            win_ffi::OCR_APPSTARTING,
+            win_ffi::OCR_SIZEALL,
+            win_ffi::OCR_SIZENESW,
+            win_ffi::OCR_SIZENS,
+            win_ffi::OCR_SIZENWSE,
+            win_ffi::OCR_SIZEWE,
+        ];
+        for id in cursor_ids {
+            let copy = win_ffi::CopyIcon(cross);
+            if !copy.is_null() {
+                win_ffi::SetSystemCursor(copy, id);
+            }
+        }
+    }
+}
+
+#[cfg(target_os = "windows")]
+fn restore_system_cursors() {
+    unsafe {
+        win_ffi::SystemParametersInfoW(
+            win_ffi::SPI_SETCURSORS,
+            0,
+            std::ptr::null_mut(),
+            0,
+        );
+    }
+}
+
+/// Color picker interativo para Windows: instala mouse hook global,
+/// aguarda clique do usuário, captura posição do cursor e lê o pixel.
+/// Lógica baseada no projeto wcolor (https://github.com/Elvyria/wcolor)
+#[cfg(target_os = "windows")]
+fn pick_color_interactive() -> Result<PixelColor, String> {
+    unsafe {
+        set_all_cursors_to_cross();
+
+        // Instala hook global de mouse de baixo nível
+        let hook = win_ffi::SetWindowsHookExW(
+            win_ffi::WH_MOUSE_LL,
+            Some(low_mouse_proc),
+            std::ptr::null_mut(),
+            0,
+        );
+
+        if hook.is_null() {
+            restore_system_cursors();
+            return Err("Falha ao instalar mouse hook para captura de cor".to_string());
+        }
+
+        // Message loop - bloqueia até PostQuitMessage ser chamado pelo hook (no clique)
+        let mut msg = win_ffi::MSG::default();
+        win_ffi::GetMessageW(&mut msg, std::ptr::null_mut(), 0, 0);
+
+        // Remove o hook após o clique e restaura cursores
+        win_ffi::UnhookWindowsHookEx(hook);
+        restore_system_cursors();
+
+        // Captura posição do cursor no momento do clique
+        let mut p = win_ffi::POINT::default();
+        win_ffi::GetCursorPos(&mut p);
+
+        // Lê a cor do pixel na posição do cursor
+        let dc = win_ffi::GetDC(std::ptr::null_mut());
+        if dc.is_null() {
+            return Err("Falha ao obter Device Context da tela".to_string());
+        }
+
+        let color = win_ffi::GetPixel(dc, p.x, p.y);
+        win_ffi::ReleaseDC(std::ptr::null_mut(), dc);
+
+        if color == 0xFFFFFFFF {
+            return Err("Falha ao capturar pixel (coordenada fora da tela)".to_string());
+        }
+
+        // COLORREF format: 0x00BBGGRR
         let r = (color & 0xFF) as u8;
         let g = ((color >> 8) & 0xFF) as u8;
         let b = ((color >> 16) & 0xFF) as u8;
@@ -246,11 +442,17 @@ pub async fn pick_color_portal() -> Result<PixelColor, String> {
     }
 }
 
-#[cfg(not(target_os = "linux"))]
+#[cfg(target_os = "windows")]
 #[tauri::command(rename_all = "camelCase")]
 pub async fn pick_color_portal() -> Result<PixelColor, String> {
-    Err(
-        "pick_color_portal só é suportado no Linux. Use get_pixel_color no Windows/macOS."
-            .to_string(),
-    )
+    // Executa o picker interativo em thread bloqueante para não travar o runtime tokio
+    tokio::task::spawn_blocking(|| pick_color_interactive())
+        .await
+        .map_err(|e| format!("Erro na task de captura: {}", e))?
+}
+
+#[cfg(target_os = "macos")]
+#[tauri::command(rename_all = "camelCase")]
+pub async fn pick_color_portal() -> Result<PixelColor, String> {
+    Err("pick_color_portal ainda não suportado no macOS. Use get_pixel_color.".to_string())
 }
