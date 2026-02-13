@@ -1,6 +1,7 @@
 import { useState } from "react";
 import type { RequestEntry } from "./logic";
 import { isSuccessStatus, truncateBody, copyToClipboard } from "./logic";
+import JsonViewer from "./JsonViewer";
 
 interface Props {
     entry: RequestEntry;
@@ -82,7 +83,7 @@ export default function RequestCard({ entry }: Props) {
                                 {copiado === "headers" ? "✓" : "Copiar"}
                             </button>
                         </div>
-                        <pre className="detail-content">{headersStr}</pre>
+                        <JsonViewer content={headersStr} maxHeight="300px" />
                     </div>
 
                     <div className="detail-section">
@@ -95,7 +96,7 @@ export default function RequestCard({ entry }: Props) {
                                 {copiado === "body" ? "✓" : "Copiar"}
                             </button>
                         </div>
-                        <pre className="detail-content">{bodyStr}</pre>
+                        <JsonViewer content={bodyStr} maxHeight="300px" />
                     </div>
                 </div>
             )}

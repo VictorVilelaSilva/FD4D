@@ -1,0 +1,152 @@
+/* ===================================
+   JSON Viewer - Syntax Highlighting
+   =================================== */
+
+.json-viewer {
+    background: rgba(var(--bg-primary-rgb), 0.6);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm);
+    margin: 0;
+    overflow-x: auto;
+    overflow-y: auto;
+    line-height: 1.8;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(var(--bg-accent-rgb), 0.2) transparent;
+}
+
+.json-viewer::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.json-viewer::-webkit-scrollbar-track {
+    background: rgba(var(--bg-primary-rgb), 0.4);
+    border-radius: 10px;
+}
+
+.json-viewer::-webkit-scrollbar-thumb {
+    background: rgba(var(--bg-accent-rgb), 0.3);
+    border-radius: 10px;
+}
+
+.json-viewer::-webkit-scrollbar-thumb:hover {
+    background: rgba(var(--bg-accent-rgb), 0.5);
+}
+
+.json-viewer code {
+    font-family: var(--font-mono);
+    color: var(--font-primary);
+}
+
+.json-line {
+    display: block;
+}
+
+.json-indent {
+    display: inline-block;
+}
+
+/* ===== Token Colors (Dark Mode) ===== */
+
+/* Keys - Purple/Violet */
+.json-key {
+    color: #a855f7;
+    font-weight: 500;
+}
+
+/* String values - Green */
+.json-string {
+    color: var(--font-success);
+}
+
+/* Numbers - Orange */
+.json-number {
+    color: var(--font-warning);
+}
+
+/* Booleans - Cyan */
+.json-boolean {
+    color: var(--font-accent);
+    font-weight: 500;
+}
+
+/* Null - Gray */
+.json-null {
+    color: var(--font-secondary);
+    font-style: italic;
+}
+
+/* Punctuation - Light gray */
+.json-punctuation {
+    color: var(--font-secondary);
+}
+
+/* Empty state */
+.json-empty {
+    color: var(--font-secondary);
+    font-style: italic;
+    opacity: 0.7;
+}
+
+/* Plain text (invalid JSON) */
+.json-plain {
+    color: var(--font-primary);
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+/* ===================================
+   Light Mode Adjustments
+   =================================== */
+
+:root:not(.dark) .json-viewer {
+    background: rgba(var(--bg-tertiary-rgb), 0.8);
+    border: 1px solid var(--border-secondary);
+    scrollbar-color: rgba(var(--bg-accent-rgb), 0.2) transparent;
+}
+
+:root:not(.dark) .json-viewer::-webkit-scrollbar-track {
+    background: rgba(var(--bg-tertiary-rgb), 0.6);
+}
+
+:root:not(.dark) .json-viewer::-webkit-scrollbar-thumb {
+    background: rgba(var(--bg-accent-rgb), 0.3);
+}
+
+:root:not(.dark) .json-viewer::-webkit-scrollbar-thumb:hover {
+    background: rgba(var(--bg-accent-rgb), 0.5);
+}
+
+/* Light Mode Token Colors */
+:root:not(.dark) .json-key {
+    color: #7c3aed;
+    font-weight: 600;
+}
+
+:root:not(.dark) .json-string {
+    color: var(--font-success);
+}
+
+:root:not(.dark) .json-number {
+    color: var(--font-warning);
+}
+
+:root:not(.dark) .json-boolean {
+    color: var(--font-accent);
+    font-weight: 600;
+}
+
+:root:not(.dark) .json-null {
+    color: var(--font-secondary);
+    font-style: italic;
+}
+
+:root:not(.dark) .json-punctuation {
+    color: #475569;
+}
+
+:root:not(.dark) .json-empty {
+    opacity: 0.6;
+}

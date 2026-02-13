@@ -22,8 +22,8 @@
     font-size: clamp(1rem, 3vw, 1.25rem);
     letter-spacing: 2px;
     color: var(--font-primary);
-    background-color: rgba(13, 16, 22, 0.6);
-    border: 1px solid rgba(82, 54, 139, 0.3);
+    background-color: rgba(var(--bg-primary-rgb), 0.6);
+    border: 1px solid rgba(var(--border-primary-rgb), 0.3);
     border-radius: var(--border-radius-md);
     outline: none;
     transition: border-color var(--transition-normal),
@@ -39,17 +39,17 @@
 
 .validador .validador-input:focus {
     border-color: var(--bg-accent);
-    box-shadow: 0 0 0 2px rgba(140, 82, 255, 0.15);
+    box-shadow: 0 0 0 2px rgba(var(--bg-accent-rgb), 0.15);
 }
 
 .validador .validador-input.input-valido {
     border-color: var(--font-success);
-    box-shadow: 0 0 0 2px rgba(39, 174, 96, 0.15);
+    box-shadow: 0 0 0 2px rgba(var(--font-success-rgb), 0.15);
 }
 
 .validador .validador-input.input-invalido {
     border-color: var(--font-error);
-    box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.15);
+    box-shadow: 0 0 0 2px rgba(var(--font-error-rgb), 0.15);
 }
 
 /* Botão Limpar (X) dentro do input */
@@ -72,7 +72,7 @@
 
 .validador .btn-limpar:hover {
     color: var(--font-primary);
-    background-color: rgba(255, 255, 255, 0.08);
+    background-color: rgba(var(--font-primary-rgb), 0.08);
 }
 
 /* Botão Validar */
@@ -105,14 +105,14 @@
 }
 
 .validador .validador-resultado.valido {
-    background-color: rgba(39, 174, 96, 0.08);
-    border-color: rgba(39, 174, 96, 0.3);
+    background-color: rgba(var(--font-success-rgb), 0.08);
+    border-color: rgba(var(--font-success-rgb), 0.3);
 }
 
 .validador .validador-resultado.invalido,
 .validador .validador-resultado.erro {
-    background-color: rgba(231, 76, 60, 0.08);
-    border-color: rgba(231, 76, 60, 0.3);
+    background-color: rgba(var(--font-error-rgb), 0.08);
+    border-color: rgba(var(--font-error-rgb), 0.3);
 }
 
 .validador .resultado-icon {
@@ -126,13 +126,13 @@
 }
 
 .validador .validador-resultado.valido .resultado-icon {
-    background-color: rgba(39, 174, 96, 0.15);
+    background-color: rgba(var(--font-success-rgb), 0.15);
     color: var(--font-success);
 }
 
 .validador .validador-resultado.invalido .resultado-icon,
 .validador .validador-resultado.erro .resultado-icon {
-    background-color: rgba(231, 76, 60, 0.15);
+    background-color: rgba(var(--font-error-rgb), 0.15);
     color: var(--font-error);
 }
 
