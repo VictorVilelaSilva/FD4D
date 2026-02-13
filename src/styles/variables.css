@@ -115,6 +115,6 @@
     --border-secondary-rgb: 226, 232, 240;
 
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
-    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 8px 16px -4px rgba(0, 0, 0, 0.15), 0 4px 8px -2px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 20px 40px -8px rgba(0, 0, 0, 0.2), 0 8px 16px -4px rgba(0, 0, 0, 0.12);
 }
