@@ -110,7 +110,8 @@ function CardGerador({
 function GeradorCPFCNPJ() {
     const [cpf, setCpf] = useState("");
     const [cnpj, setCnpj] = useState("");
-    const [comMascara, setComMascara] = useState(true);
+    const [comMascaraCPF, setComMascaraCPF] = useState(true);
+    const [comMascaraPJ, setComMascaraPJ] = useState(true);
     const [copiadoCpf, setCopiadoCpf] = useState(false);
     const [copiadoCnpj, setCopiadoCnpj] = useState(false);
     const [cpfKey, setCpfKey] = useState(0);
@@ -118,7 +119,7 @@ function GeradorCPFCNPJ() {
 
     async function handleGerarCpf() {
         try {
-            setCpf(await gerarCpf(comMascara));
+            setCpf(await gerarCpf(comMascaraCPF));
             setCpfKey((prev) => prev + 1);
             setCopiadoCpf(false);
         } catch (error) {
@@ -128,7 +129,7 @@ function GeradorCPFCNPJ() {
 
     async function handleGerarCnpj() {
         try {
-            setCnpj(await gerarCnpj(comMascara));
+            setCnpj(await gerarCnpj(comMascaraPJ));
             setCnpjKey((prev) => prev + 1);
             setCopiadoCnpj(false);
         } catch (error) {
@@ -155,8 +156,8 @@ function GeradorCPFCNPJ() {
                 valor={cpf}
                 valorKey={cpfKey}
                 copiado={copiadoCpf}
-                comMascara={comMascara}
-                onToggleMascara={setComMascara}
+                comMascara={comMascaraCPF}
+                onToggleMascara={setComMascaraCPF}
                 mascaraExemplo="XXX.XXX.XXX-XX"
                 onGerar={handleGerarCpf}
                 onCopiar={() => handleCopiar(cpf, "cpf")}
@@ -167,8 +168,8 @@ function GeradorCPFCNPJ() {
                 valor={cnpj}
                 valorKey={cnpjKey}
                 copiado={copiadoCnpj}
-                comMascara={comMascara}
-                onToggleMascara={setComMascara}
+                comMascara={comMascaraPJ}
+                onToggleMascara={setComMascaraPJ}
                 mascaraExemplo="XX.XXX.XXX/0001-XX"
                 onGerar={handleGerarCnpj}
                 onCopiar={() => handleCopiar(cnpj, "cnpj")}
