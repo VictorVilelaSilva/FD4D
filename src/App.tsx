@@ -12,6 +12,7 @@ import { AuroraText } from "./components/ui/aurora-text";
 import { SparklesText } from "./components/ui/sparkles-text";
 import { BlurFade } from "./components/ui/blur-fade";
 import { TypingAnimation } from "./components/ui/typing-animation";
+import { AnimatedThemeToggler } from "./components/ui/animated-theme-toggler";
 
 function App() {
   const [ferramentaAtiva, setFerramentaAtiva] = useState("home");
@@ -20,6 +21,9 @@ function App() {
 
   return (
     <div className="app-container">
+      {/* Theme Toggle */}
+      <AnimatedThemeToggler className="theme-toggle-btn" />
+
       {/* Background condicional: RetroGrid na home, DotPattern nas outras */}
       {isHome ? (
         <RetroGrid

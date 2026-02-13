@@ -87,3 +87,24 @@
     justify-content: space-around !important;
   }
 }
+
+/* ===== Light Theme Overrides ===== */
+:root:not(.dark) .dock-bar {
+  background-color: rgba(255, 255, 255, 0.85) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(140, 82, 255, 0.1);
+}
+
+:root:not(.dark) .dock-icon-inner {
+  background-color: rgba(241, 245, 249, 0.8);
+}
+
+:root:not(.dark) .dock-icon-item:hover .dock-icon-inner {
+  background-color: rgba(226, 232, 240, 0.9);
+}
+
+:root:not(.dark) .dock-tooltip {
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}

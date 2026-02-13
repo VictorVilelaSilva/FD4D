@@ -556,3 +556,89 @@
         padding: 0.6rem 0.8rem;
     }
 }
+
+/* ===== TEMA CLARO OVERRIDES (WEBHOOK) ===== */
+:root:not(.dark) .webhook-config,
+:root:not(.dark) .webhook-requests.ferramenta {
+  border: none;
+  box-shadow: var(--shadow-md);
+}
+
+:root:not(.dark) .config-section {
+  border-top: 1px solid var(--border-secondary);
+}
+
+:root:not(.dark) .webhook-input,
+:root:not(.dark) .webhook-select,
+:root:not(.dark) .webhook-textarea {
+  border: 1px solid var(--border-secondary);
+}
+
+:root:not(.dark) .webhook-input:focus,
+:root:not(.dark) .webhook-select:focus,
+:root:not(.dark) .webhook-textarea:focus {
+  box-shadow: 0 0 0 2px rgba(var(--bg-accent-rgb), 0.1);
+}
+
+:root:not(.dark) .btn-clear {
+  border: 1px solid var(--border-secondary);
+}
+
+:root:not(.dark) .btn-clear:hover {
+  background: rgba(var(--font-error-rgb), 0.08);
+}
+
+:root:not(.dark) .requests-list::-webkit-scrollbar-thumb {
+  background: rgba(var(--bg-accent-rgb), 0.25);
+}
+
+:root:not(.dark) .request-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-secondary);
+}
+
+:root:not(.dark) .request-card:hover {
+  border-color: rgba(var(--border-primary-rgb), 0.35);
+}
+
+:root:not(.dark) .request-card-header:hover {
+  background: rgba(var(--bg-accent-rgb), 0.04);
+}
+
+:root:not(.dark) .badge-success {
+  background: rgba(var(--font-success-rgb), 0.15);
+}
+
+:root:not(.dark) .badge-error {
+  background: rgba(var(--font-error-rgb), 0.15);
+}
+
+:root:not(.dark) .request-error-reason {
+  background: rgba(var(--font-error-rgb), 0.06);
+}
+
+:root:not(.dark) .request-card-details {
+  border-top: 1px solid var(--border-secondary);
+}
+
+:root:not(.dark) .btn-copy-sm {
+  border: 1px solid var(--border-secondary);
+}
+
+:root:not(.dark) .btn-copy-sm:hover {
+  color: var(--font-accent);
+  border-color: var(--font-accent);
+}
+
+:root:not(.dark) .btn-copy-sm.copied {
+  background: rgba(var(--font-success-rgb), 0.1);
+}
+
+:root:not(.dark) .detail-content {
+  background: var(--input-bg);
+  color: var(--font-primary);
+}
+
+:root:not(.dark) .detail-content::-webkit-scrollbar-thumb {
+  background: rgba(var(--bg-accent-rgb), 0.2);
+}
