@@ -224,3 +224,45 @@
         height: 18px;
     }
 }
+
+/* ===== TEMA CLARO OVERRIDES (VALIDATOR) ===== */
+:root:not(.dark) .validador .validador-input {
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-secondary);
+}
+
+:root:not(.dark) .validador .validador-input:focus {
+    box-shadow: 0 0 0 2px rgba(var(--bg-accent-rgb), 0.1);
+}
+
+:root:not(.dark) .validador .validador-input.input-valido {
+    box-shadow: 0 0 0 2px rgba(var(--font-success-rgb), 0.15);
+}
+
+:root:not(.dark) .validador .validador-input.input-invalido {
+    box-shadow: 0 0 0 2px rgba(var(--font-error-rgb), 0.15);
+}
+
+:root:not(.dark) .validador .btn-limpar:hover {
+    background-color: var(--bg-hover);
+}
+
+:root:not(.dark) .validador .validador-resultado.valido {
+    background-color: rgba(var(--font-success-rgb), 0.08);
+    border-color: rgba(var(--font-success-rgb), 0.3);
+}
+
+:root:not(.dark) .validador .validador-resultado.invalido,
+:root:not(.dark) .validador .validador-resultado.erro {
+    background-color: rgba(var(--font-error-rgb), 0.08);
+    border-color: rgba(var(--font-error-rgb), 0.3);
+}
+
+:root:not(.dark) .validador .validador-resultado.valido .resultado-icon {
+    background-color: rgba(var(--font-success-rgb), 0.15);
+}
+
+:root:not(.dark) .validador .validador-resultado.invalido .resultado-icon,
+:root:not(.dark) .validador .validador-resultado.erro .resultado-icon {
+    background-color: rgba(var(--font-error-rgb), 0.15);
+}
