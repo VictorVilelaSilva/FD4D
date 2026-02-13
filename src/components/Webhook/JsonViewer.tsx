@@ -13,25 +13,25 @@ interface JsonToken {
 
 function tokenizeJson(content: string): JsonToken[] {
     const tokens: JsonToken[] = [];
-    
+
     try {
         // Try to parse and format JSON
         const parsed = JSON.parse(content);
         const formatted = JSON.stringify(parsed, null, 2);
-        
-        // Regex to match JSON tokens
-        const regex = /"([^"]+)"(?=\s*:)|"([^"]+)"|(-?\d+\.?\d*)|true|false|null|[{}[\],:]/g;
+
+        // Regex to match JSON tokens (including empty strings)
+        const regex = /"([^"]*)"(?=\s*:)|"([^"]*)"|(-?\d+\.?\d*)|true|false|null|[{}[\],:]/g;
         let match;
-        
+
         while ((match = regex.exec(formatted)) !== null) {
             const value = match[0];
-            
+
             if (value === "{" || value === "}" || value === "[" || value === "]" || value === "," || value === ":") {
                 tokens.push({ type: "punctuation", value });
-            } else if (match[1]) {
+            } else if (match[1] !== undefined) {
                 // Matched key (before colon)
                 tokens.push({ type: "key", value: `"${match[1]}"` });
-            } else if (match[2]) {
+            } else if (match[2] !== undefined) {
                 // Matched string value
                 tokens.push({ type: "string", value: `"${match[2]}"` });
             } else if (match[3]) {
@@ -43,7 +43,7 @@ function tokenizeJson(content: string): JsonToken[] {
                 tokens.push({ type: "null", value });
             }
         }
-        
+
         return tokens;
     } catch {
         // Not valid JSON, return as plain text
@@ -132,7 +132,7 @@ export default function JsonViewer({ content, maxHeight = "300px" }: JsonViewerP
         }
 
         const tokens = tokenizeJson(content);
-        
+
         // If it's just one token and it's a string (invalid JSON), display as plain text
         if (tokens.length === 1 && tokens[0].type === "string") {
             return <span className="json-plain">{content}</span>;
