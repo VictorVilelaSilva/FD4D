@@ -60,6 +60,18 @@ mod win_ffi {
     pub const WH_MOUSE_LL: i32 = 14;
     pub const WM_LBUTTONDOWN: u32 = 0x0201;
 
+    pub const IDC_CROSS: *const u16 = 32515 as *const u16;
+    pub const OCR_NORMAL: u32 = 32512;
+    pub const OCR_IBEAM: u32 = 32513;
+    pub const OCR_HAND: u32 = 32649;
+    pub const OCR_APPSTARTING: u32 = 32650;
+    pub const OCR_SIZEALL: u32 = 32646;
+    pub const OCR_SIZENESW: u32 = 32643;
+    pub const OCR_SIZENS: u32 = 32645;
+    pub const OCR_SIZENWSE: u32 = 32642;
+    pub const OCR_SIZEWE: u32 = 32644;
+    pub const SPI_SETCURSORS: u32 = 0x0057;
+
     #[repr(C)]
     pub struct POINT {
         pub x: i32,
@@ -115,6 +127,15 @@ mod win_ffi {
         ) -> i32;
         pub fn PostQuitMessage(nExitCode: i32);
         pub fn GetCursorPos(lpPoint: *mut POINT) -> i32;
+        pub fn LoadCursorW(hInstance: *mut c_void, lpCursorName: *const u16) -> *mut c_void;
+        pub fn SetSystemCursor(hcur: *mut c_void, id: u32) -> i32;
+        pub fn CopyIcon(hIcon: *mut c_void) -> *mut c_void;
+        pub fn SystemParametersInfoW(
+            uiAction: u32,
+            uiParam: u32,
+            pvParam: *mut c_void,
+            fWinIni: u32,
+        ) -> i32;
     }
 
     #[link(name = "gdi32")]
@@ -165,12 +186,53 @@ fn platform_get_pixel_color(x: i32, y: i32) -> Result<PixelColor, String> {
     }
 }
 
+#[cfg(target_os = "windows")]
+fn set_all_cursors_to_cross() {
+    unsafe {
+        let cross = win_ffi::LoadCursorW(std::ptr::null_mut(), win_ffi::IDC_CROSS);
+        if cross.is_null() {
+            return;
+        }
+        let cursor_ids = [
+            win_ffi::OCR_NORMAL,
+            win_ffi::OCR_IBEAM,
+            win_ffi::OCR_HAND,
+            win_ffi::OCR_APPSTARTING,
+            win_ffi::OCR_SIZEALL,
+            win_ffi::OCR_SIZENESW,
+            win_ffi::OCR_SIZENS,
+            win_ffi::OCR_SIZENWSE,
+            win_ffi::OCR_SIZEWE,
+        ];
+        for id in cursor_ids {
+            let copy = win_ffi::CopyIcon(cross);
+            if !copy.is_null() {
+                win_ffi::SetSystemCursor(copy, id);
+            }
+        }
+    }
+}
+
+#[cfg(target_os = "windows")]
+fn restore_system_cursors() {
+    unsafe {
+        win_ffi::SystemParametersInfoW(
+            win_ffi::SPI_SETCURSORS,
+            0,
+            std::ptr::null_mut(),
+            0,
+        );
+    }
+}
+
 /// Color picker interativo para Windows: instala mouse hook global,
 /// aguarda clique do usuário, captura posição do cursor e lê o pixel.
 /// Lógica baseada no projeto wcolor (https://github.com/Elvyria/wcolor)
 #[cfg(target_os = "windows")]
 fn pick_color_interactive() -> Result<PixelColor, String> {
     unsafe {
+        set_all_cursors_to_cross();
+
         // Instala hook global de mouse de baixo nível
         let hook = win_ffi::SetWindowsHookExW(
             win_ffi::WH_MOUSE_LL,
@@ -180,6 +242,7 @@ fn pick_color_interactive() -> Result<PixelColor, String> {
         );
 
         if hook.is_null() {
+            restore_system_cursors();
             return Err("Falha ao instalar mouse hook para captura de cor".to_string());
         }
 
@@ -187,8 +250,9 @@ fn pick_color_interactive() -> Result<PixelColor, String> {
         let mut msg = win_ffi::MSG::default();
         win_ffi::GetMessageW(&mut msg, std::ptr::null_mut(), 0, 0);
 
-        // Remove o hook após o clique
+        // Remove o hook após o clique e restaura cursores
         win_ffi::UnhookWindowsHookEx(hook);
+        restore_system_cursors();
 
         // Captura posição do cursor no momento do clique
         let mut p = win_ffi::POINT::default();
