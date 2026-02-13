@@ -2,6 +2,7 @@ import { useState } from "react";
 import WebhookTool from "./components/Webhook/WebhookTool";
 import ColorPicker from "./components/ColorPicker/ColorPicker";
 import "./App.css";
+import "./styles/tools.css";
 import DockNav from "./components/Dock/Dock";
 import GeradorCPFCNPJ from "./components/CPFGenerator/GeradorCPFCNPJ";
 import ValidadorCPFCNPJ from "./components/ValidadorCPFCNPJ/ValidadorCPFCNPJ";
@@ -39,7 +40,7 @@ function App() {
       )}
 
       <main className="conteudo">
-        {isHome && (
+        <div className={`tool-wrapper ${isHome ? "active" : ""}`}>
           <div className="home-welcome">
             <div className="brand-logo">
               <span className="brand-line-from bevan-regular">FROM</span>
@@ -81,11 +82,19 @@ function App() {
               </p>
             </BlurFade>
           </div>
-        )}
-        {ferramentaAtiva === "cpf/cnpj" && <GeradorCPFCNPJ />}
-        {ferramentaAtiva === "validador" && <ValidadorCPFCNPJ />}
-        {ferramentaAtiva === "webhook" && <WebhookTool />}
-        {ferramentaAtiva === "colorpicker" && <ColorPicker />}
+        </div>
+        <div className={`tool-wrapper ${ferramentaAtiva === "cpf/cnpj" ? "active" : ""}`}>
+          <GeradorCPFCNPJ />
+        </div>
+        <div className={`tool-wrapper ${ferramentaAtiva === "validador" ? "active" : ""}`}>
+          <ValidadorCPFCNPJ />
+        </div>
+        <div className={`tool-wrapper ${ferramentaAtiva === "webhook" ? "active" : ""}`}>
+          <WebhookTool />
+        </div>
+        <div className={`tool-wrapper ${ferramentaAtiva === "colorpicker" ? "active" : ""}`}>
+          <ColorPicker />
+        </div>
       </main>
 
       <DockNav
