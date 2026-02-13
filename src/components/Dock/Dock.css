@@ -8,8 +8,8 @@
 
 .dock-bar {
   background-color: rgba(26, 26, 28, 0.85) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(140, 82, 255, 0.1);
+  border: 1px solid rgba(var(--font-primary-rgb), 0.08) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(var(--bg-accent-rgb), 0.1);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   padding: 8px 12px !important;
@@ -48,7 +48,7 @@
 }
 
 .dock-icon-item.active .dock-icon-inner {
-  background-color: rgba(140, 82, 255, 0.15);
+  background-color: rgba(var(--bg-accent-rgb), 0.15);
 }
 
 .dock-tooltip {
@@ -67,7 +67,7 @@
   pointer-events: none;
   transition: opacity 0.15s ease, transform 0.15s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(var(--font-primary-rgb), 0.06);
 }
 
 .dock-tooltip.visible {
@@ -92,11 +92,11 @@
 :root:not(.dark) .dock-bar {
   background-color: rgba(255, 255, 255, 0.85) !important;
   border: 1px solid rgba(0, 0, 0, 0.08) !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(140, 82, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(var(--bg-accent-rgb), 0.1);
 }
 
 :root:not(.dark) .dock-icon-inner {
-  background-color: rgba(241, 245, 249, 0.8);
+  background-color: rgba(var(--bg-tertiary-rgb), 0.8);
 }
 
 :root:not(.dark) .dock-icon-item:hover .dock-icon-inner {

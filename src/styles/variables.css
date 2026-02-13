@@ -5,17 +5,29 @@
 :root {
     /* ===== CORES DE FONTE ===== */
     --font-primary: #fffefe;
+    --font-primary-rgb: 255, 254, 254;
     --font-secondary: #7f8c8d;
+    --font-secondary-rgb: 127, 140, 141;
     --font-accent: #3498db;
+    --font-accent-rgb: 52, 152, 219;
     --font-success: #27ae60;
+    --font-success-rgb: 39, 174, 96;
     --font-error: #e74c3c;
+    --font-error-rgb: 231, 76, 60;
     --font-warning: #f39c12;
+    --font-warning-rgb: 243, 156, 18;
 
     /* ===== CORES DE BACKGROUND ===== */
     --bg-primary: #0d1016;
+    --bg-primary-rgb: 13, 16, 22;
     --bg-secondary: #1c1c1e;
+    --bg-secondary-rgb: 28, 28, 30;
+    --bg-tertiary: #2d2d30;
+    --bg-tertiary-rgb: 45, 45, 48;
     --bg-accent: #8c52ff;
+    --bg-accent-rgb: 140, 82, 255;
     --bg-hover: #34495e;
+    --bg-hover-rgb: 52, 73, 94;
 
     /* ===== CORES DE COMPONENTES ===== */
     --card-bg: var(--bg-secondary);
@@ -26,7 +38,9 @@
 
     /* ===== BORDAS ===== */
     --border-primary: #52368b;
+    --border-primary-rgb: 82, 54, 139;
     --border-secondary: #34495e;
+    --border-secondary-rgb: 52, 73, 94;
     --border-radius-sm: 6px;
     --border-radius-md: 8px;
     --border-radius-lg: 12px;
@@ -66,19 +80,28 @@
 /* ===== TEMA CLARO ===== */
 :root:not(.dark) {
     --font-primary: #0F172A;
+    --font-primary-rgb: 15, 23, 42;
     --font-secondary: #64748b;
+    --font-secondary-rgb: 100, 116, 139;
     --font-accent: #6366F1;
+    --font-accent-rgb: 99, 102, 241;
     --font-success: #16a34a;
     --font-success-rgb: 22, 163, 74;
     --font-error: #dc2626;
     --font-error-rgb: 220, 38, 38;
     --font-warning: #d97706;
+    --font-warning-rgb: 217, 119, 6;
 
-    --bg-primary: #F8FAFC;
+    --bg-primary: #F4F5FA;
+    --bg-primary-rgb: 244, 245, 250;
     --bg-secondary: #ffffff;
+    --bg-secondary-rgb: 255, 255, 255;
+    --bg-tertiary: #f1f5f9;
+    --bg-tertiary-rgb: 241, 245, 249;
     --bg-accent: #6366F1;
     --bg-accent-rgb: 99, 102, 241;
     --bg-hover: #e2e8f0;
+    --bg-hover-rgb: 226, 232, 240;
 
     --card-bg: #ffffff;
     --sidebar-bg: #F8FAFC;
@@ -89,6 +112,7 @@
     --border-primary: #a78bfa;
     --border-primary-rgb: 167, 139, 250;
     --border-secondary: #e2e8f0;
+    --border-secondary-rgb: 226, 232, 240;
 
     --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
