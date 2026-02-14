@@ -6,13 +6,14 @@ import "./styles/tools.css";
 import DockNav from "./components/Dock/Dock";
 import GeradorCPFCNPJ from "./components/CPFGenerator/GeradorCPFCNPJ";
 import ValidadorCPFCNPJ from "./components/ValidadorCPFCNPJ/ValidadorCPFCNPJ";
-import { RetroGrid } from "./components/ui/retro-grid";
 import { DotPattern } from "./components/ui/dot-pattern";
 import { AuroraText } from "./components/ui/aurora-text";
 import { SparklesText } from "./components/ui/sparkles-text";
 import { BlurFade } from "./components/ui/blur-fade";
 import { TypingAnimation } from "./components/ui/typing-animation";
 import { AnimatedThemeToggler } from "./components/ui/animated-theme-toggler";
+import { Particles } from "./components/ui/particles";
+import { Meteors } from "./components/ui/meteors";
 
 function App() {
   const [ferramentaAtiva, setFerramentaAtiva] = useState("home");
@@ -24,16 +25,21 @@ function App() {
       {/* Theme Toggle */}
       <AnimatedThemeToggler className="theme-toggle-btn" />
 
-      {/* Background condicional: RetroGrid na home, DotPattern nas outras */}
+      {/* Background condicional: Particles + Meteors na home, DotPattern nas outras */}
       {isHome ? (
-        <RetroGrid
-          className="opacity-30"
-          angle={30}
-          cellSize={150}
-          opacity={0.3}
-          darkLineColor="rgba(140, 82, 255, 0.25)"
-          lightLineColor="rgba(140, 82, 255, 0.15)"
-        />
+        <>
+          <Particles
+            className="absolute inset-0 pointer-events-none"
+            quantity={150}
+            ease={80}
+            color="#8c52ff"
+            size={1}
+            staticity={60}
+          />
+          <Meteors
+            number={30}
+          />
+        </>
       ) : (
         <DotPattern
           className="opacity-20"
