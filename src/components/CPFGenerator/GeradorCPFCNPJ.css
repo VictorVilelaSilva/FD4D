@@ -10,6 +10,12 @@
   overflow: hidden;
 }
 
+.ferramenta-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .ferramenta h1 {
   margin-top: 0;
   margin-bottom: var(--spacing-xs);
@@ -20,6 +26,25 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
+}
+
+.btn-historico {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid rgba(82, 54, 139, 0.4);
+  border-radius: var(--border-radius-sm);
+  color: var(--font-secondary);
+  cursor: pointer;
+  padding: 6px;
+  transition: all var(--transition-normal);
+}
+
+.btn-historico:hover {
+  background-color: rgba(140, 82, 255, 0.15);
+  border-color: var(--bg-accent);
+  color: var(--bg-accent);
 }
 
 .inline-icon {
@@ -259,4 +284,238 @@
   background-color: var(--bg-hover);
   border-color: var(--font-accent);
   color: var(--font-accent);
+}
+
+:root:not(.dark) .btn-historico {
+  border-color: var(--border-secondary);
+  color: var(--font-secondary);
+}
+
+:root:not(.dark) .btn-historico:hover {
+  background-color: var(--bg-hover);
+  border-color: var(--font-accent);
+  color: var(--font-accent);
+}
+
+/* ===== MODAL HISTÓRICO ===== */
+.historico-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.historico-modal {
+  width: 90%;
+  max-width: 480px;
+  max-height: 80vh;
+  background: var(--bg-secondary);
+  border: 1px solid rgba(var(--border-primary-rgb), 0.3);
+  border-radius: var(--border-radius-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUp 0.2s ease;
+}
+
+.historico-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-lg) var(--spacing-xl);
+  border-bottom: 1px solid rgba(var(--border-primary-rgb), 0.2);
+}
+
+.historico-header h2 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--font-primary);
+}
+
+.historico-fechar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--font-secondary);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: var(--border-radius-sm);
+  transition: all var(--transition-normal);
+}
+
+.historico-fechar:hover {
+  color: var(--font-primary);
+  background: rgba(var(--bg-hover-rgb), 0.5);
+}
+
+.historico-vazio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xxl) var(--spacing-xl);
+  color: var(--font-secondary);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+}
+
+.historico-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.historico-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-xl);
+  border-bottom: 1px solid rgba(var(--border-primary-rgb), 0.1);
+  transition: background var(--transition-fast);
+}
+
+.historico-item:hover {
+  background: rgba(var(--bg-hover-rgb), 0.3);
+}
+
+.historico-item:last-child {
+  border-bottom: none;
+}
+
+.historico-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.historico-valor {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  color: var(--font-primary);
+  letter-spacing: 1px;
+}
+
+.historico-data {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: var(--font-secondary);
+}
+
+.historico-copiar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: transparent;
+  border: 1px solid rgba(82, 54, 139, 0.3);
+  border-radius: var(--border-radius-sm);
+  color: var(--font-secondary);
+  cursor: pointer;
+  padding: 6px;
+  transition: all var(--transition-normal);
+}
+
+.historico-copiar:hover {
+  background-color: rgba(140, 82, 255, 0.15);
+  border-color: var(--bg-accent);
+  color: var(--bg-accent);
+}
+
+.historico-copiar.copiado {
+  background-color: rgba(39, 174, 96, 0.15);
+  border-color: var(--font-success);
+  color: var(--font-success);
+}
+
+.historico-footer {
+  display: flex;
+  justify-content: center;
+  padding: var(--spacing-sm) var(--spacing-xl);
+  border-top: 1px solid rgba(var(--border-primary-rgb), 0.2);
+}
+
+.historico-limpar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid rgba(231, 76, 60, 0.3);
+  border-radius: var(--border-radius-sm);
+  color: var(--font-error);
+  cursor: pointer;
+  padding: var(--spacing-xs) var(--spacing-md);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  transition: all var(--transition-normal);
+}
+
+.historico-limpar:hover {
+  background-color: rgba(231, 76, 60, 0.1);
+  border-color: var(--font-error);
+}
+
+/* ===== TEMA CLARO OVERRIDES - MODAL ===== */
+:root:not(.dark) .historico-modal {
+  background: #ffffff;
+  border: 1px solid var(--border-secondary);
+  box-shadow: var(--shadow-lg);
+}
+
+:root:not(.dark) .historico-header {
+  border-bottom-color: var(--border-secondary);
+}
+
+:root:not(.dark) .historico-item {
+  border-bottom-color: var(--border-secondary);
+}
+
+:root:not(.dark) .historico-item:hover {
+  background: var(--bg-hover);
+}
+
+:root:not(.dark) .historico-copiar {
+  border-color: var(--border-secondary);
+}
+
+:root:not(.dark) .historico-copiar:hover {
+  background-color: var(--bg-hover);
+  border-color: var(--font-accent);
+  color: var(--font-accent);
+}
+
+:root:not(.dark) .historico-footer {
+  border-top-color: var(--border-secondary);
+}
+
+:root:not(.dark) .historico-limpar {
+  border-color: rgba(220, 38, 38, 0.3);
+  color: var(--font-error);
+}
+
+:root:not(.dark) .historico-limpar:hover {
+  background-color: rgba(220, 38, 38, 0.08);
+  border-color: var(--font-error);
 }
