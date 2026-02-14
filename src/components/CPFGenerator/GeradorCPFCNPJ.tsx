@@ -3,6 +3,8 @@ import { BorderBeam } from "../ui/border-beam";
 import { ShimmerButton } from "../ui/shimmer-button";
 import { TypingAnimation } from "../ui/typing-animation";
 import { gerarCpf, gerarCnpj, copiarParaClipboard } from "./gerador";
+import { adicionarAoHistorico } from "./historico";
+import HistoricoModal from "./HistoricoModal";
 import "./GeradorCPFCNPJ.css";
 
 const IconeDocumento = () => (
@@ -27,6 +29,13 @@ const IconeCopiar = () => (
     </svg>
 );
 
+const IconeHistorico = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+        <rect width="24" height="24" fill="none" />
+        <path fill="none" stroke="currentColor" strokeWidth="1.9" d="M4.998 7V1H19.5L23 4.5V23h-6m1-22v5h5M10 23a7 7 0 1 0 0-14a7 7 0 0 0 0 14Zm0-11v4l3 3" />
+    </svg>
+);
+
 interface CardGeradorProps {
     titulo: string;
     label: string;
@@ -38,17 +47,27 @@ interface CardGeradorProps {
     mascaraExemplo: string;
     onGerar: () => void;
     onCopiar: () => void;
+    onAbrirHistorico: () => void;
 }
 
 function CardGerador({
     titulo, label, valor, valorKey, copiado,
     comMascara, onToggleMascara, mascaraExemplo,
-    onGerar, onCopiar,
+    onGerar, onCopiar, onAbrirHistorico,
 }: CardGeradorProps) {
     return (
         <div className="ferramenta">
             <BorderBeam size={80} duration={8} colorFrom="#8c52ff" colorTo="#a855f7" borderWidth={1} />
-            <h1><IconeDocumento /> {titulo}</h1>
+            <div className="ferramenta-header">
+                <h1><IconeDocumento /> {titulo}</h1>
+                <button
+                    className="btn-historico"
+                    onClick={onAbrirHistorico}
+                    title="Ver histórico"
+                >
+                    <IconeHistorico />
+                </button>
+            </div>
 
             <div className="opcoes">
                 <label className="checkbox-label">
@@ -116,12 +135,15 @@ function GeradorCPFCNPJ() {
     const [copiadoCnpj, setCopiadoCnpj] = useState(false);
     const [cpfKey, setCpfKey] = useState(0);
     const [cnpjKey, setCnpjKey] = useState(0);
+    const [historicoAberto, setHistoricoAberto] = useState<"cpf" | "cnpj" | null>(null);
 
     async function handleGerarCpf() {
         try {
-            setCpf(await gerarCpf(comMascaraCPF));
+            const valor = await gerarCpf(comMascaraCPF);
+            setCpf(valor);
             setCpfKey((prev) => prev + 1);
             setCopiadoCpf(false);
+            adicionarAoHistorico("cpf", valor);
         } catch (error) {
             console.error("Erro ao gerar CPF:", error);
         }
@@ -129,9 +151,11 @@ function GeradorCPFCNPJ() {
 
     async function handleGerarCnpj() {
         try {
-            setCnpj(await gerarCnpj(comMascaraPJ));
+            const valor = await gerarCnpj(comMascaraPJ);
+            setCnpj(valor);
             setCnpjKey((prev) => prev + 1);
             setCopiadoCnpj(false);
+            adicionarAoHistorico("cnpj", valor);
         } catch (error) {
             console.error("Erro ao gerar CNPJ:", error);
         }
@@ -161,6 +185,7 @@ function GeradorCPFCNPJ() {
                 mascaraExemplo="XXX.XXX.XXX-XX"
                 onGerar={handleGerarCpf}
                 onCopiar={() => handleCopiar(cpf, "cpf")}
+                onAbrirHistorico={() => setHistoricoAberto("cpf")}
             />
             <CardGerador
                 titulo="Gerador de CNPJ"
@@ -173,7 +198,15 @@ function GeradorCPFCNPJ() {
                 mascaraExemplo="XX.XXX.XXX/0001-XX"
                 onGerar={handleGerarCnpj}
                 onCopiar={() => handleCopiar(cnpj, "cnpj")}
+                onAbrirHistorico={() => setHistoricoAberto("cnpj")}
             />
+            {historicoAberto && (
+                <HistoricoModal
+                    tipo={historicoAberto}
+                    aberto={true}
+                    onFechar={() => setHistoricoAberto(null)}
+                />
+            )}
         </>
     );
 }
