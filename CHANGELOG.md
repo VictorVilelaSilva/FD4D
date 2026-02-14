@@ -5,6 +5,32 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [3.1.0] - 2026-02-14
+
+### Adicionado
+- **Histórico de Documentos**: Sistema completo de histórico para CPF e CNPJ gerados (PR #23)
+  - Modal de visualização com lista de documentos gerados
+  - Botão de copiar individual para cada documento
+  - Contador de documentos no histórico
+  - Sistema de cache persistente entre ferramentas
+  - Interface responsiva e animada
+- **Efeitos Visuais Home**: Melhorias significativas na página inicial (PR #22)
+  - Componente Particles com animação de partículas flutuantes
+  - Componente Meteors com efeito de meteoros caindo
+  - Background dinâmico e interativo
+  - Melhor experiência visual de boas-vindas
+
+### Removido
+- **Sidebar Component**: Removido componente de sidebar e estilos associados para simplificar a interface
+  - Dock permanece como único método de navegação
+  - Interface mais limpa e minimalista
+  - Melhoria na organização de arquivos CSS
+
+### Melhorado
+- **Arquitetura de Componentes**: Organização aprimorada com separação de lógica e apresentação
+- **Performance**: Redução de componentes desnecessários melhora tempo de renderização
+- **UX**: Transições mais suaves entre ferramentas com histórico preservado
+
 ## [3.0.3] - 2026-02-13
 
 ### Adicionado
