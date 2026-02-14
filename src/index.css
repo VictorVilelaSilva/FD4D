@@ -12,6 +12,7 @@
     --animate-shine: shine var(--duration) infinite linear;
     --animate-blink-cursor: blink-cursor 1s step-end infinite;
     --animate-grid: grid 15s linear infinite;
+    --animate-meteor: meteor 10s linear infinite;
 
     @keyframes gradient {
 
@@ -96,6 +97,22 @@
 
         100% {
             transform: translateY(0);
+        }
+    }
+
+    @keyframes meteor {
+        0% {
+            transform: rotate(var(--angle)) translateX(0);
+            opacity: 1;
+        }
+
+        70% {
+            opacity: 1;
+        }
+
+        100% {
+            transform: rotate(var(--angle)) translateX(-200vmax);
+            opacity: 0;
         }
     }
 }
