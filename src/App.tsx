@@ -14,6 +14,7 @@ import { TypingAnimation } from "./components/ui/typing-animation";
 import { AnimatedThemeToggler } from "./components/ui/animated-theme-toggler";
 import { Particles } from "./components/ui/particles";
 import { Meteors } from "./components/ui/meteors";
+import UpdateChecker from "./components/UpdateChecker/UpdateChecker";
 
 function App() {
   const [ferramentaAtiva, setFerramentaAtiva] = useState("home");
@@ -22,6 +23,8 @@ function App() {
 
   return (
     <div className="app-container">
+      <UpdateChecker />
+
       {/* Theme Toggle */}
       <AnimatedThemeToggler className="theme-toggle-btn" />
 
