@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useUpdateChecker } from "./useUpdateChecker";
+import { Download } from "lucide-react";
 import "./UpdateChecker.css";
 
 export default function UpdateChecker() {
@@ -14,11 +15,7 @@ export default function UpdateChecker() {
     <div className="update-overlay">
       <div className="update-dialog">
         <div className="update-dialog-header">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline points="7 10 12 15 17 10" />
-            <line x1="12" y1="15" x2="12" y2="3" />
-          </svg>
+          <Download size={22} />
           <h2>Nova atualização disponível</h2>
         </div>
 

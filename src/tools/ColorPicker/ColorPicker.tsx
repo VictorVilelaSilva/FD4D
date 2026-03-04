@@ -7,14 +7,7 @@ import { pickColorFromScreen, copiarParaClipboard, getContrastColor, PixelColor 
 import { ColorValuesSection } from "./components/ColorValuesSection";
 import { ColorPickerInstructions } from "./components/ColorPickerInstructions";
 import "./ColorPicker.css";
-
-const IconePipeta = () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="m2 22 1-1h3l9-9" />
-        <path d="M3 21v-3l9-9" />
-        <path d="m15 6 3.4-3.4a2.1 2.1 0 1 1 3 3L18 9l.4.4a2.1 2.1 0 1 1-3 3l-3.8-3.8a2.1 2.1 0 1 1 3-3l.4.4Z" />
-    </svg>
-);
+import { Pipette } from "lucide-react";
 
 function ColorPicker() {
     const [cor, setCor] = useState<PixelColor | null>(null);
@@ -66,8 +59,7 @@ function ColorPicker() {
                     <BorderBeam size={80} duration={8} colorFrom="#8c52ff" colorTo="#a855f7" borderWidth={1} />
                     <div className="color-picker-card-inner">
                         <h1 className="color-picker-header">
-                            <IconePipeta />
-                            Color Picker
+                            <Pipette /> Color Picker
                         </h1>
 
                         <div className="color-preview-section">

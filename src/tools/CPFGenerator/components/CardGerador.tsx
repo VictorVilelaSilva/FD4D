@@ -1,35 +1,8 @@
 import { BorderBeam } from "@/components/ui/border-beam";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
 import { TypingAnimation } from "@/components/ui/typing-animation";
+import { Copy, CopyCheck, File, FileSearch } from "lucide-react";
 
-const IconeDocumento = () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="inline-icon">
-        <rect x="2" y="3" width="20" height="18" rx="2" />
-        <path d="M9 7h6" />
-        <path d="M9 11h6" />
-        <path d="M9 15h4" />
-    </svg>
-);
-
-const IconeCopiado = () => (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <polyline points="20 6 9 17 4 12" />
-    </svg>
-);
-
-const IconeCopiar = () => (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-    </svg>
-);
-
-const IconeHistorico = () => (
-    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
-        <rect width="24" height="24" fill="none" />
-        <path fill="none" stroke="currentColor" strokeWidth="1.9" d="M4.998 7V1H19.5L23 4.5V23h-6m1-22v5h5M10 23a7 7 0 1 0 0-14a7 7 0 0 0 0 14Zm0-11v4l3 3" />
-    </svg>
-);
 
 export interface CardGeradorProps {
     titulo: string;
@@ -54,9 +27,9 @@ export function CardGerador({
         <div className="ferramenta">
             <BorderBeam size={80} duration={8} colorFrom="#8c52ff" colorTo="#a855f7" borderWidth={1} />
             <div className="ferramenta-header">
-                <h1><IconeDocumento /> {titulo}</h1>
+                <h1><File size={25} /> {titulo}</h1>
                 <button className="btn-historico" onClick={onAbrirHistorico} title="Ver histórico">
-                    <IconeHistorico />
+                    <FileSearch size={25} />
                 </button>
             </div>
 
@@ -109,7 +82,7 @@ export function CardGerador({
                         disabled={!valor}
                         title="Copiar para área de transferência"
                     >
-                        {copiado ? (<><IconeCopiado /> Copiado!</>) : (<><IconeCopiar /> Copiar</>)}
+                        {copiado ? (<><CopyCheck size={16} />Copiado!</>) : (<><Copy size={16} /> Copiar</>)}
                     </button>
                 </div>
             </div>

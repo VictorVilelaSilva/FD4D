@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { HistoricoItem, formatarTimestamp, limparHistorico, obterHistorico } from "../historico";
 import { copiarParaClipboard } from "../gerador";
+import { Copy, CopyCheck, Shredder, X } from "lucide-react";
 
 interface HistoricoModalProps {
     tipo: "cpf" | "cnpj";
@@ -8,25 +9,6 @@ interface HistoricoModalProps {
     onFechar: () => void;
 }
 
-const IconeCopiar = () => (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-    </svg>
-);
-
-const IconeCopiado = () => (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <polyline points="20 6 9 17 4 12" />
-    </svg>
-);
-
-const IconeLixeira = () => (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <polyline points="3 6 5 6 21 6" />
-        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-    </svg>
-);
 
 function HistoricoModal({ tipo, aberto, onFechar }: HistoricoModalProps) {
     const [itens, setItens] = useState<HistoricoItem[]>([]);
@@ -63,10 +45,7 @@ function HistoricoModal({ tipo, aberto, onFechar }: HistoricoModalProps) {
                 <div className="historico-header">
                     <h2>Histórico de {titulo}</h2>
                     <button className="historico-fechar" onClick={onFechar}>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <line x1="18" y1="6" x2="6" y2="18" />
-                            <line x1="6" y1="6" x2="18" y2="18" />
-                        </svg>
+                        <X size={20} />
                     </button>
                 </div>
 
@@ -88,14 +67,14 @@ function HistoricoModal({ tipo, aberto, onFechar }: HistoricoModalProps) {
                                         onClick={() => handleCopiar(item.valor, idx)}
                                         title="Copiar"
                                     >
-                                        {copiadoIdx === idx ? <IconeCopiado /> : <IconeCopiar />}
+                                        {copiadoIdx === idx ? <CopyCheck size={16} /> : <Copy size={16} />}
                                     </button>
                                 </li>
                             ))}
                         </ul>
                         <div className="historico-footer">
                             <button className="historico-limpar" onClick={handleLimpar}>
-                                <IconeLixeira /> Limpar histórico
+                                <Shredder size={16} /> Limpar histórico
                             </button>
                         </div>
                     </>

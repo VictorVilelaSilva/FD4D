@@ -2,31 +2,8 @@ import { type ResultadoValidacao } from "./validador";
 import { useValidador } from "./useValidador";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
+import { Check, X, CircleCheck, SquareCheck } from "lucide-react";
 import "./ValidadorCPFCNPJ.css";
-
-const IconeCheck = () => (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
-);
-const IconeX = () => (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
-);
-const IconeLimpar = () => (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
-);
-
-const IconeValidarCpf = () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="inline-icon">
-        <path d="M9 12l2 2 4-4" />
-        <path d="M12 3c7.2 0 9 1.8 9 9s-1.8 9-9 9-9-1.8-9-9 1.8-9 9-9" />
-    </svg>
-);
-
-const IconeValidarCnpj = () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="inline-icon">
-        <path d="M9 12l2 2 4-4" />
-        <rect x="2" y="3" width="20" height="18" rx="2" />
-    </svg>
-);
 
 interface CampoValidadorProps {
     titulo: string;
@@ -72,7 +49,7 @@ function CampoValidador({
                     />
                     {valor && (
                         <button className="btn-limpar" onClick={onLimpar} title="Limpar">
-                            <IconeLimpar />
+                            <X size={14} />
                         </button>
                     )}
                 </div>
@@ -94,7 +71,7 @@ function CampoValidador({
             {resultado !== "idle" && (
                 <div className={`validador-resultado ${resultado}`}>
                     <div className="resultado-icon">
-                        {resultado === "valido" ? <IconeCheck /> : <IconeX />}
+                        {resultado === "valido" ? <Check size={22} /> : <X size={22} />}
                     </div>
                     <span className="resultado-texto">{mensagem}</span>
                 </div>
@@ -111,7 +88,7 @@ function ValidadorCPFCNPJ() {
         <>
             <CampoValidador
                 titulo="Validador de CPF"
-                icone={<IconeValidarCpf />}
+                icone={<CircleCheck size={24} className="inline-icon" />}
                 placeholder="000.000.000-00"
                 valor={cpf.input}
                 resultado={cpf.resultado}
@@ -125,7 +102,7 @@ function ValidadorCPFCNPJ() {
             />
             <CampoValidador
                 titulo="Validador de CNPJ"
-                icone={<IconeValidarCnpj />}
+                icone={<SquareCheck size={24} className="inline-icon" />}
                 placeholder="00.000.000/0000-00"
                 valor={cnpj.input}
                 resultado={cnpj.resultado}
