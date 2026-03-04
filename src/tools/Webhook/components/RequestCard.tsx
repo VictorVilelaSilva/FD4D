@@ -1,6 +1,6 @@
 import { useState } from "react";
-import type { RequestEntry } from "./logic";
-import { isSuccessStatus, truncateBody, copyToClipboard } from "./logic";
+import type { RequestEntry } from "../logic";
+import { isSuccessStatus, truncateBody, copyToClipboard } from "../logic";
 import JsonViewer from "./JsonViewer";
 
 interface Props {

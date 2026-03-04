@@ -1,53 +1,10 @@
-import { useState, useEffect } from "react";
-import { checkForUpdate, installUpdate, type UpdateInfo, type UpdateStatus } from "./logic";
+import { useState } from "react";
+import { useUpdateChecker } from "./useUpdateChecker";
 import "./UpdateChecker.css";
 
 export default function UpdateChecker() {
-  const [status, setStatus] = useState<UpdateStatus>("idle");
-  const [info, setInfo] = useState<UpdateInfo | null>(null);
-  const [progress, setProgress] = useState(0);
-  const [error, setError] = useState("");
+  const { status, info, progress, error, handleInstall } = useUpdateChecker();
   const [dismissed, setDismissed] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function run() {
-      setStatus("checking");
-      try {
-        const result = await checkForUpdate();
-        if (cancelled) return;
-        if (result) {
-          setInfo(result);
-          setStatus("available");
-        } else {
-          setStatus("idle");
-        }
-      } catch (err) {
-        if (cancelled) return;
-        console.error("Update check failed:", err);
-        setStatus("idle");
-      }
-    }
-
-    run();
-    return () => { cancelled = true; };
-  }, []);
-
-  async function handleInstall() {
-    setStatus("downloading");
-    setError("");
-    try {
-      await installUpdate((percent) => {
-        setProgress(percent);
-        if (percent >= 100) setStatus("installing");
-      });
-    } catch (err) {
-      console.error("Update install failed:", err);
-      setError(String(err));
-      setStatus("error");
-    }
-  }
 
   if (status === "idle" || status === "checking" || dismissed) {
     return null;

@@ -1,11 +1,6 @@
-import { useState } from "react";
-import { BorderBeam } from "../ui/border-beam";
-import { ShimmerButton } from "../ui/shimmer-button";
-import { TypingAnimation } from "../ui/typing-animation";
-import { gerarCpf, gerarCnpj, copiarParaClipboard } from "./gerador";
-import { adicionarAoHistorico } from "./historico";
-import HistoricoModal from "./HistoricoModal";
-import "./GeradorCPFCNPJ.css";
+import { BorderBeam } from "@/components/ui/border-beam";
+import { ShimmerButton } from "@/components/ui/shimmer-button";
+import { TypingAnimation } from "@/components/ui/typing-animation";
 
 const IconeDocumento = () => (
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="inline-icon">
@@ -36,7 +31,7 @@ const IconeHistorico = () => (
     </svg>
 );
 
-interface CardGeradorProps {
+export interface CardGeradorProps {
     titulo: string;
     label: string;
     valor: string;
@@ -50,7 +45,7 @@ interface CardGeradorProps {
     onAbrirHistorico: () => void;
 }
 
-function CardGerador({
+export function CardGerador({
     titulo, label, valor, valorKey, copiado,
     comMascara, onToggleMascara, mascaraExemplo,
     onGerar, onCopiar, onAbrirHistorico,
@@ -60,11 +55,7 @@ function CardGerador({
             <BorderBeam size={80} duration={8} colorFrom="#8c52ff" colorTo="#a855f7" borderWidth={1} />
             <div className="ferramenta-header">
                 <h1><IconeDocumento /> {titulo}</h1>
-                <button
-                    className="btn-historico"
-                    onClick={onAbrirHistorico}
-                    title="Ver histórico"
-                >
+                <button className="btn-historico" onClick={onAbrirHistorico} title="Ver histórico">
                     <IconeHistorico />
                 </button>
             </div>
@@ -125,90 +116,3 @@ function CardGerador({
         </div>
     );
 }
-
-function GeradorCPFCNPJ() {
-    const [cpf, setCpf] = useState("");
-    const [cnpj, setCnpj] = useState("");
-    const [comMascaraCPF, setComMascaraCPF] = useState(true);
-    const [comMascaraPJ, setComMascaraPJ] = useState(true);
-    const [copiadoCpf, setCopiadoCpf] = useState(false);
-    const [copiadoCnpj, setCopiadoCnpj] = useState(false);
-    const [cpfKey, setCpfKey] = useState(0);
-    const [cnpjKey, setCnpjKey] = useState(0);
-    const [historicoAberto, setHistoricoAberto] = useState<"cpf" | "cnpj" | null>(null);
-
-    async function handleGerarCpf() {
-        try {
-            const valor = await gerarCpf(comMascaraCPF);
-            setCpf(valor);
-            setCpfKey((prev) => prev + 1);
-            setCopiadoCpf(false);
-            adicionarAoHistorico("cpf", valor);
-        } catch (error) {
-            console.error("Erro ao gerar CPF:", error);
-        }
-    }
-
-    async function handleGerarCnpj() {
-        try {
-            const valor = await gerarCnpj(comMascaraPJ);
-            setCnpj(valor);
-            setCnpjKey((prev) => prev + 1);
-            setCopiadoCnpj(false);
-            adicionarAoHistorico("cnpj", valor);
-        } catch (error) {
-            console.error("Erro ao gerar CNPJ:", error);
-        }
-    }
-
-    async function handleCopiar(texto: string, tipo: "cpf" | "cnpj") {
-        try {
-            await copiarParaClipboard(texto);
-            const setter = tipo === "cpf" ? setCopiadoCpf : setCopiadoCnpj;
-            setter(true);
-            setTimeout(() => setter(false), 2000);
-        } catch (error) {
-            console.error("Erro ao copiar:", error);
-        }
-    }
-
-    return (
-        <>
-            <CardGerador
-                titulo="Gerador de CPF"
-                label="CPF Gerado"
-                valor={cpf}
-                valorKey={cpfKey}
-                copiado={copiadoCpf}
-                comMascara={comMascaraCPF}
-                onToggleMascara={setComMascaraCPF}
-                mascaraExemplo="XXX.XXX.XXX-XX"
-                onGerar={handleGerarCpf}
-                onCopiar={() => handleCopiar(cpf, "cpf")}
-                onAbrirHistorico={() => setHistoricoAberto("cpf")}
-            />
-            <CardGerador
-                titulo="Gerador de CNPJ"
-                label="CNPJ Gerado"
-                valor={cnpj}
-                valorKey={cnpjKey}
-                copiado={copiadoCnpj}
-                comMascara={comMascaraPJ}
-                onToggleMascara={setComMascaraPJ}
-                mascaraExemplo="XX.XXX.XXX/0001-XX"
-                onGerar={handleGerarCnpj}
-                onCopiar={() => handleCopiar(cnpj, "cnpj")}
-                onAbrirHistorico={() => setHistoricoAberto("cnpj")}
-            />
-            {historicoAberto && (
-                <HistoricoModal
-                    tipo={historicoAberto}
-                    aberto={true}
-                    onFechar={() => setHistoricoAberto(null)}
-                />
-            )}
-        </>
-    );
-}
-
-export default GeradorCPFCNPJ;

@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { HistoricoItem, formatarTimestamp, limparHistorico, obterHistorico } from "./historico";
-import { copiarParaClipboard } from "./gerador";
+import { useState, useEffect } from "react";
+import { HistoricoItem, formatarTimestamp, limparHistorico, obterHistorico } from "../historico";
+import { copiarParaClipboard } from "../gerador";
 
 interface HistoricoModalProps {
     tipo: "cpf" | "cnpj";
@@ -34,9 +34,11 @@ function HistoricoModal({ tipo, aberto, onFechar }: HistoricoModalProps) {
 
     const titulo = tipo === "cpf" ? "CPF" : "CNPJ";
 
-    function atualizar() {
-        setItens(obterHistorico(tipo));
-    }
+    useEffect(() => {
+        if (aberto) {
+            setItens(obterHistorico(tipo));
+        }
+    }, [aberto, tipo]);
 
     function handleLimpar() {
         limparHistorico(tipo);
@@ -54,13 +56,6 @@ function HistoricoModal({ tipo, aberto, onFechar }: HistoricoModalProps) {
     }
 
     if (!aberto) return null;
-
-    if (itens.length === 0 && aberto) {
-        const fresh = obterHistorico(tipo);
-        if (fresh.length !== itens.length) {
-            setTimeout(() => atualizar(), 0);
-        }
-    }
 
     return (
         <div className="historico-overlay" onClick={onFechar}>
