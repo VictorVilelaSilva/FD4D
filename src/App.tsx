@@ -4,8 +4,7 @@ import ColorPicker from "./components/ColorPicker/ColorPicker";
 import "./App.css";
 import "./styles/tools.css";
 import DockNav from "./components/Dock/Dock";
-import GeradorCPFCNPJ from "./components/CPFGenerator/GeradorCPFCNPJ";
-import ValidadorCPFCNPJ from "./components/ValidadorCPFCNPJ/ValidadorCPFCNPJ";
+import DocumentosTool from "./components/Documentos/DocumentosTool";
 import { DotPattern } from "./components/ui/dot-pattern";
 import { AuroraText } from "./components/ui/aurora-text";
 import { SparklesText } from "./components/ui/sparkles-text";
@@ -96,11 +95,8 @@ function App() {
             </BlurFade>
           </div>
         </div>
-        <div className={`tool-wrapper ${ferramentaAtiva === "cpf/cnpj" ? "active" : ""}`}>
-          <GeradorCPFCNPJ />
-        </div>
-        <div className={`tool-wrapper ${ferramentaAtiva === "validador" ? "active" : ""}`}>
-          <ValidadorCPFCNPJ />
+        <div className={`tool-wrapper ${ferramentaAtiva === "documentos" ? "active" : ""}`}>
+          <DocumentosTool />
         </div>
         <div className={`tool-wrapper ${ferramentaAtiva === "webhook" ? "active" : ""}`}>
           <WebhookTool />

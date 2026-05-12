@@ -22,24 +22,14 @@ function DockNav({ ferramentaAtiva, setFerramentaAtiva }: DockNavProps) {
       ),
     },
     {
-      id: "cpf/cnpj",
-      nome: "CPF/CNPJ",
+      id: "documentos",
+      nome: "Documentos (CPF/CNPJ)",
       icone: (
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <rect x="2" y="3" width="20" height="18" rx="2" />
           <path d="M9 7h6" />
           <path d="M9 11h6" />
           <path d="M9 15h4" />
-        </svg>
-      ),
-    },
-    {
-      id: "validador",
-      nome: "Validador CPF/CNPJ",
-      icone: (
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M9 12l2 2 4-4" />
-          <path d="M12 3c7.2 0 9 1.8 9 9s-1.8 9-9 9-9-1.8-9-9 1.8-9 9-9" />
         </svg>
       ),
     },

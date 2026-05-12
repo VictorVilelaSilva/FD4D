@@ -37,47 +37,56 @@ pub fn gerar_cpf(com_mascara: bool) -> String {
     }
 }
 
+// Valor do caractere segundo IN RFB 2.229/2024: ord(c) - 48.
+// '0'..'9' -> 0..9; 'A'..'Z' -> 17..42.
+fn cnpj_char_value(c: char) -> Option<u32> {
+    if c.is_ascii_digit() || ('A'..='Z').contains(&c) {
+        Some((c as u32) - 48)
+    } else {
+        None
+    }
+}
+
+fn cnpj_dv(chars: &[char], weights: &[u32]) -> u32 {
+    let sum: u32 = chars
+        .iter()
+        .zip(weights.iter())
+        .map(|(&c, &w)| cnpj_char_value(c).unwrap_or(0) * w)
+        .sum();
+    let rest = sum % 11;
+    if rest < 2 { 0 } else { 11 - rest }
+}
+
 #[tauri::command(rename_all = "camelCase")]
-pub fn gerar_cnpj(com_mascara: bool) -> String {
+pub fn gerar_cnpj(com_mascara: bool, alfanumerico: bool) -> String {
     let mut rng = rand::rng();
 
-    let mut cnpj: Vec<u32> = (0..8).map(|_| rng.random_range(0..10)).collect();
-    cnpj.extend_from_slice(&[0, 0, 0, 1]);
+    let alfa_charset: Vec<char> = ('0'..='9').chain('A'..='Z').collect();
 
-    let first_weights = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
-    let second_weights = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
-
-    let first_digit = {
-        let sum: u32 = cnpj
-            .iter()
-            .zip(first_weights.iter())
-            .map(|(&digit, &weight)| digit * weight)
-            .sum();
-
-        let rest = sum % 11;
-        if rest < 2 {
-            0
-        } else {
-            11 - rest
-        }
+    let mut cnpj: Vec<char> = if alfanumerico {
+        let base: Vec<char> = (0..8)
+            .map(|_| alfa_charset[rng.random_range(0..alfa_charset.len())])
+            .collect();
+        let ordem: Vec<char> = (0..4)
+            .map(|_| alfa_charset[rng.random_range(0..alfa_charset.len())])
+            .collect();
+        [base, ordem].concat()
+    } else {
+        let mut v: Vec<char> = (0..8)
+            .map(|_| char::from_digit(rng.random_range(0..10), 10).unwrap())
+            .collect();
+        v.extend(['0', '0', '0', '1']);
+        v
     };
-    cnpj.push(first_digit);
 
-    let second_digit = {
-        let sum: u32 = cnpj
-            .iter()
-            .zip(second_weights.iter())
-            .map(|(&digit, &weight)| digit * weight)
-            .sum();
+    let first_weights: [u32; 12] = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+    let second_weights: [u32; 13] = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
 
-        let rest = sum % 11;
-        if rest < 2 {
-            0
-        } else {
-            11 - rest
-        }
-    };
-    cnpj.push(second_digit);
+    let first_digit = cnpj_dv(&cnpj, &first_weights);
+    cnpj.push(char::from_digit(first_digit, 10).unwrap());
+
+    let second_digit = cnpj_dv(&cnpj, &second_weights);
+    cnpj.push(char::from_digit(second_digit, 10).unwrap());
 
     if com_mascara {
         format!(
@@ -98,7 +107,7 @@ pub fn gerar_cnpj(com_mascara: bool) -> String {
             cnpj[13]
         )
     } else {
-        cnpj.iter().map(|d| d.to_string()).collect::<String>()
+        cnpj.iter().collect::<String>()
     }
 }
 
@@ -133,44 +142,36 @@ pub fn validar_cpf(cpf_input: &str) -> Result<bool, String> {
 
 #[tauri::command(rename_all = "camelCase")]
 pub fn validar_cnpj(cnpj_input: &str) -> Result<bool, String> {
-    let digits: Vec<u32> = cnpj_input
+    // Mantém apenas caracteres válidos do CNPJ alfanumérico (0-9, A-Z, em uppercase).
+    let chars: Vec<char> = cnpj_input
         .chars()
-        .filter(|c| c.is_ascii_digit())
-        .filter_map(|c| c.to_digit(10))
+        .map(|c| c.to_ascii_uppercase())
+        .filter(|c| c.is_ascii_digit() || ('A'..='Z').contains(c))
         .collect();
 
-    if digits.len() != 14 {
-        return Err("CNPJ deve conter exatamente 14 dígitos".into());
+    if chars.len() != 14 {
+        return Err("CNPJ deve conter exatamente 14 caracteres (alfanuméricos)".into());
     }
 
-    if digits.windows(2).all(|w| w[0] == w[1]) {
+    // Os dois últimos dígitos (DVs) precisam ser numéricos.
+    if !chars[12].is_ascii_digit() || !chars[13].is_ascii_digit() {
+        return Ok(false);
+    }
+
+    if chars.windows(2).all(|w| w[0] == w[1]) {
         return Ok(false);
     }
 
     let first_weights: [u32; 12] = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
     let second_weights: [u32; 13] = [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
 
-    let sum: u32 = digits[..12]
-        .iter()
-        .zip(first_weights.iter())
-        .map(|(&d, &w)| d * w)
-        .sum();
-    let rest = sum % 11;
-    let first_digit = if rest < 2 { 0 } else { 11 - rest };
-
-    if first_digit != digits[12] {
+    let first_digit = cnpj_dv(&chars[..12], &first_weights);
+    if first_digit != chars[12].to_digit(10).unwrap() {
         return Ok(false);
     }
 
-    let sum: u32 = digits[..13]
-        .iter()
-        .zip(second_weights.iter())
-        .map(|(&d, &w)| d * w)
-        .sum();
-    let rest = sum % 11;
-    let second_digit = if rest < 2 { 0 } else { 11 - rest };
-
-    if second_digit != digits[13] {
+    let second_digit = cnpj_dv(&chars[..13], &second_weights);
+    if second_digit != chars[13].to_digit(10).unwrap() {
         return Ok(false);
     }
 

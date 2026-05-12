@@ -11,12 +11,18 @@ export function formatarCpfInput(valor: string): string {
 }
 
 export function formatarCnpjInput(valor: string): string {
-    const n = valor.replace(/\D/g, "").slice(0, 14);
-    if (n.length <= 2) return n;
-    if (n.length <= 5) return `${n.slice(0, 2)}.${n.slice(2)}`;
-    if (n.length <= 8) return `${n.slice(0, 2)}.${n.slice(2, 5)}.${n.slice(5)}`;
-    if (n.length <= 12) return `${n.slice(0, 2)}.${n.slice(2, 5)}.${n.slice(5, 8)}/${n.slice(8)}`;
-    return `${n.slice(0, 2)}.${n.slice(2, 5)}.${n.slice(5, 8)}/${n.slice(8, 12)}-${n.slice(12)}`;
+    // CNPJ alfanumérico (IN RFB 2.229/2024):
+    // posições 1-12 aceitam [0-9A-Z]; DVs (posições 13-14) apenas [0-9].
+    const upper = valor.toUpperCase();
+    const base = upper.replace(/[^0-9A-Z]/g, "").slice(0, 12);
+    const rest = upper.replace(/[^0-9A-Z]/g, "").slice(12, 14).replace(/\D/g, "");
+    const full = base + rest;
+
+    if (full.length <= 2) return full;
+    if (full.length <= 5) return `${full.slice(0, 2)}.${full.slice(2)}`;
+    if (full.length <= 8) return `${full.slice(0, 2)}.${full.slice(2, 5)}.${full.slice(5)}`;
+    if (full.length <= 12) return `${full.slice(0, 2)}.${full.slice(2, 5)}.${full.slice(5, 8)}/${full.slice(8)}`;
+    return `${full.slice(0, 2)}.${full.slice(2, 5)}.${full.slice(5, 8)}/${full.slice(8, 12)}-${full.slice(12)}`;
 }
 
 export interface ResultadoValidar {

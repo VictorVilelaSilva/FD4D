@@ -45,6 +45,8 @@ interface CardGeradorProps {
     comMascara: boolean;
     onToggleMascara: (checked: boolean) => void;
     mascaraExemplo: string;
+    alfanumerico?: boolean;
+    onToggleAlfanumerico?: (checked: boolean) => void;
     onGerar: () => void;
     onCopiar: () => void;
     onAbrirHistorico: () => void;
@@ -53,6 +55,7 @@ interface CardGeradorProps {
 function CardGerador({
     titulo, label, valor, valorKey, copiado,
     comMascara, onToggleMascara, mascaraExemplo,
+    alfanumerico, onToggleAlfanumerico,
     onGerar, onCopiar, onAbrirHistorico,
 }: CardGeradorProps) {
     return (
@@ -78,6 +81,16 @@ function CardGerador({
                     />
                     Com máscara ({mascaraExemplo})
                 </label>
+                {onToggleAlfanumerico && (
+                    <label className="checkbox-label">
+                        <input
+                            type="checkbox"
+                            checked={!!alfanumerico}
+                            onChange={(e) => onToggleAlfanumerico(e.target.checked)}
+                        />
+                        Alfanumérico (novo formato)
+                    </label>
+                )}
             </div>
 
             <ShimmerButton
@@ -131,6 +144,7 @@ function GeradorCPFCNPJ() {
     const [cnpj, setCnpj] = useState("");
     const [comMascaraCPF, setComMascaraCPF] = useState(true);
     const [comMascaraPJ, setComMascaraPJ] = useState(true);
+    const [cnpjAlfanumerico, setCnpjAlfanumerico] = useState(false);
     const [copiadoCpf, setCopiadoCpf] = useState(false);
     const [copiadoCnpj, setCopiadoCnpj] = useState(false);
     const [cpfKey, setCpfKey] = useState(0);
@@ -151,7 +165,7 @@ function GeradorCPFCNPJ() {
 
     async function handleGerarCnpj() {
         try {
-            const valor = await gerarCnpj(comMascaraPJ);
+            const valor = await gerarCnpj(comMascaraPJ, cnpjAlfanumerico);
             setCnpj(valor);
             setCnpjKey((prev) => prev + 1);
             setCopiadoCnpj(false);
@@ -196,6 +210,8 @@ function GeradorCPFCNPJ() {
                 comMascara={comMascaraPJ}
                 onToggleMascara={setComMascaraPJ}
                 mascaraExemplo="XX.XXX.XXX/0001-XX"
+                alfanumerico={cnpjAlfanumerico}
+                onToggleAlfanumerico={setCnpjAlfanumerico}
                 onGerar={handleGerarCnpj}
                 onCopiar={() => handleCopiar(cnpj, "cnpj")}
                 onAbrirHistorico={() => setHistoricoAberto("cnpj")}
