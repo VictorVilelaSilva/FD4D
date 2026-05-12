@@ -6,7 +6,7 @@
 
 ### 🚀 Toolkit Desktop para Desenvolvedores
 
-[![Version](https://img.shields.io/badge/version-3.1.0-purple.svg)](https://github.com/VictorVilelaSilva/FD4D/releases)
+[![Version](https://img.shields.io/badge/version-3.3.0-purple.svg)](https://github.com/VictorVilelaSilva/FD4D/releases)
 [![Tauri](https://img.shields.io/badge/Tauri-v2-blue.svg)](https://tauri.app/)
 [![React](https://img.shields.io/badge/React-19-61dafb.svg)](https://react.dev/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -25,14 +25,14 @@
 
 ### [📦 Página de Releases](https://github.com/VictorVilelaSilva/FD4D/releases/latest)
 
-| Plataforma | Formato | Link Direto (v3.1.0) |
+| Plataforma | Formato | Link Direto (v3.3.0) |
 |:----------:|:-------:|:--------------------:|
-| 🪟 **Windows** | `.msi` | [Download MSI](https://github.com/VictorVilelaSilva/FD4D/releases/download/v3.1.0/FD4D_3.1.0.msi) |
-| 🪟 **Windows** | `.exe` | [Download EXE](https://github.com/VictorVilelaSilva/FD4D/releases/download/v3.1.0/FD4D_3.1.0.exe) |
-| 🐧 **Linux** | `.deb` | [Download DEB](https://github.com/VictorVilelaSilva/FD4D/releases/download/v3.1.0/FD4D_3.1.0.deb) |
-| 🐧 **Linux** | `.rpm` | [Download RPM](https://github.com/VictorVilelaSilva/FD4D/releases/download/v3.1.0/FD4D-3.1.0.rpm) |
-| 🐧 **Linux** | `.AppImage` | [Download AppImage](https://github.com/VictorVilelaSilva/FD4D/releases/download/v3.1.0/FD4D_3.1.0.AppImage) |
-| 🍎 **macOS** | `.dmg` | [Download DMG](https://github.com/VictorVilelaSilva/FD4D/releases/download/v3.1.0/FD4D_3.1.0.dmg) |
+| 🪟 **Windows** | `.msi` | [Download MSI](https://github.com/VictorVilelaSilva/FD4D/releases/download/v3.3.0/FD4D_3.3.0.msi) |
+| 🪟 **Windows** | `.exe` | [Download EXE](https://github.com/VictorVilelaSilva/FD4D/releases/download/v3.3.0/FD4D_3.3.0.exe) |
+| 🐧 **Linux** | `.deb` | [Download DEB](https://github.com/VictorVilelaSilva/FD4D/releases/download/v3.3.0/FD4D_3.3.0.deb) |
+| 🐧 **Linux** | `.rpm` | [Download RPM](https://github.com/VictorVilelaSilva/FD4D/releases/download/v3.3.0/FD4D-3.3.0.rpm) |
+| 🐧 **Linux** | `.AppImage` | [Download AppImage](https://github.com/VictorVilelaSilva/FD4D/releases/download/v3.3.0/FD4D_3.3.0.AppImage) |
+| 🍎 **macOS** | `.dmg` | [Download DMG](https://github.com/VictorVilelaSilva/FD4D/releases/download/v3.3.0/FD4D_3.3.0.dmg) |
 
 </div>
 

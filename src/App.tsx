@@ -1,19 +1,16 @@
 import { useState } from "react";
-import WebhookTool from "./components/Webhook/WebhookTool";
-import ColorPicker from "./components/ColorPicker/ColorPicker";
+import WebhookTool from "./tools/Webhook/WebhookTool";
+import ColorPicker from "./tools/ColorPicker/ColorPicker";
 import "./App.css";
 import "./styles/tools.css";
 import DockNav from "./components/Dock/Dock";
-import DocumentosTool from "./components/Documentos/DocumentosTool";
+import DocumentosTool from "./tools/Documentos/DocumentosTool";
+import HomePage from "./components/Home/HomePage";
 import { DotPattern } from "./components/ui/dot-pattern";
-import { AuroraText } from "./components/ui/aurora-text";
-import { SparklesText } from "./components/ui/sparkles-text";
-import { BlurFade } from "./components/ui/blur-fade";
-import { TypingAnimation } from "./components/ui/typing-animation";
 import { AnimatedThemeToggler } from "./components/ui/animated-theme-toggler";
 import { Particles } from "./components/ui/particles";
 import { Meteors } from "./components/ui/meteors";
-import UpdateChecker from "./components/UpdateChecker/UpdateChecker";
+import UpdateChecker from "./tools/UpdateChecker/UpdateChecker";
 
 function App() {
   const [ferramentaAtiva, setFerramentaAtiva] = useState("home");
@@ -38,9 +35,7 @@ function App() {
             size={1}
             staticity={60}
           />
-          <Meteors
-            number={30}
-          />
+          <Meteors number={30} />
         </>
       ) : (
         <DotPattern
@@ -53,47 +48,7 @@ function App() {
 
       <main className="conteudo">
         <div className={`tool-wrapper ${isHome ? "active" : ""}`}>
-          <div className="home-welcome">
-            <div className="brand-logo">
-              <span className="brand-line-from bevan-regular">FROM</span>
-              <span className="brand-line-dev bevan-regular">
-                <SparklesText
-                  sparklesCount={6}
-                  colors={{ first: "#8c52ff", second: "#a855f7" }}
-                >
-                  DEV
-                </SparklesText>
-              </span>
-              <span className="brand-line brand-line-last bevan-regular">
-                <AuroraText
-                  className="brand-accent"
-                  colors={["#8c52ff", "#a855f7", "#7c3aed", "#c084fc"]}
-                  speed={2}
-                >
-                  4
-                </AuroraText>
-                DEVS
-              </span>
-            </div>
-
-            <BlurFade delay={0.3} duration={0.6} direction="up">
-              <p className="home-subtitle">
-                Uma ferramenta feita{" "}
-                <TypingAnimation
-                  className="home-subtitle-typing"
-                  words={["por um desenvolvedor.", "para desenvolvedores."]}
-                  typeSpeed={80}
-                  deleteSpeed={50}
-                  pauseDelay={2000}
-                  delay={800}
-                  loop
-                  showCursor
-                  cursorStyle="line"
-                  cursorColor="var(--bg-accent)"
-                />
-              </p>
-            </BlurFade>
-          </div>
+          <HomePage />
         </div>
         <div className={`tool-wrapper ${ferramentaAtiva === "documentos" ? "active" : ""}`}>
           <DocumentosTool />

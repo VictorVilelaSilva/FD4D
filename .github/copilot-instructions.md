@@ -66,17 +66,105 @@ npm run build
 npm run tauri build
 ```
 
+## Ícones
+
+**SEMPRE** use ícones da biblioteca `lucide-react`. Nunca use SVGs inline, emojis ou outras bibliotecas de ícones.
+
+```tsx
+import { Copy, CopyCheck, File, FileSearch, Settings } from "lucide-react";
+
+// Uso correto
+<File size={25} />
+<Copy size={16} />
+```
+
+- Pesquise o ícone adequado em https://lucide.dev/icons antes de escolher
+- Defina `size` explicitamente (pequenos: `16`, médios: `20`, grandes: `25`)
+- Nunca substitua por caracteres Unicode ou texto
+
+## Componentização
+
+A componentização é **fundamental** para manter o projeto escalável e legível. Cada ferramenta deve ser dividida em peças pequenas e reutilizáveis com responsabilidades únicas.
+
+### Princípios
+- **Responsabilidade única**: cada componente faz uma coisa só
+- **Props tipadas**: sempre defina interfaces TypeScript para as props (`interface NomeProps`)
+- **Lógica separada da UI**: extraia hooks customizados (`useNomeFerramenta.ts`) para encapsular estado e efeitos
+- **Lógica pura separada**: funções utilitárias sem React vão em `logic.ts` ou `nomeFerramenta.ts`
+- **Componente raiz enxuto**: o arquivo principal da ferramenta (`NomeFerramenta.tsx`) deve apenas compor subcomponentes e conectar ao hook
+
+### O que NÃO fazer
+- Não coloque toda a lógica num único arquivo monolítico
+- Não misture chamadas `invoke` diretamente no JSX; coloque-as no hook customizado
+- Não repita estruturas de UI; extraia em subcomponentes reutilizáveis
+
 ## Estrutura de Arquivo por Ferramenta
 
-### Adicionando Nova Ferramenta
-1. Criar componente em `src/components/NomeFerramenta/`
-2. Adicionar entrada no array `ferramentas` em `Dock.tsx`
-3. Adicionar case no `App.tsx` para renderização
-4. Implementar comandos Rust se necessário em `src-tauri/src/lib.rs`
+### Organização de Diretório
 
-### Padrão de Componente
+Cada ferramenta **deve** seguir esta estrutura de pastas:
+
+```
+src/tools/NomeFerramenta/
+├── NomeFerramenta.tsx        # Componente raiz — apenas composição e roteamento de props
+├── NomeFerramenta.css        # Estilos específicos da ferramenta
+├── useNomeFerramenta.ts      # Hook customizado — todo o estado e efeitos
+├── logic.ts                  # Lógica pura (sem React): cálculos, formatações, validações
+└── components/               # Subcomponentes da ferramenta
+    ├── SecaoA.tsx
+    ├── SecaoB.tsx
+    └── ...
+```
+
+**Referência real:** veja `src/tools/CPFGenerator/` como exemplo canônico:
+```
+CPFGenerator/
+├── GeradorCPFCNPJ.tsx        # Raiz
+├── GeradorCPFCNPJ.css
+├── useGerador.ts             # Hook com toda a lógica de estado
+├── gerador.ts                # Lógica pura de geração
+├── historico.ts              # Lógica pura do histórico
+└── components/
+    ├── CardGerador.tsx       # Subcomponente reutilizável por CPF e CNPJ
+    └── HistoricoModal.tsx
+```
+
+### Passos para Adicionar Nova Ferramenta
+1. Criar diretório `src/tools/NomeFerramenta/` com a estrutura acima
+2. Implementar lógica pura em `logic.ts`
+3. Implementar estado e efeitos em `useNomeFerramenta.ts`
+4. Criar subcomponentes em `components/`
+5. Compor tudo em `NomeFerramenta.tsx`
+6. Adicionar entrada no array `ferramentas` em `Dock.tsx` (com ícone do `lucide-react`)
+7. Adicionar case no `App.tsx` para renderização
+8. Implementar comandos Rust se necessário em `src-tauri/src/lib.rs`
+
+### Padrão de Componente Raiz
 ```tsx
-function NomeFerramenta() {
+import { useNomeFerramenta } from "./useNomeFerramenta";
+import { SecaoA } from "./components/SecaoA";
+import { SecaoB } from "./components/SecaoB";
+
+export function NomeFerramenta() {
+  const { estado, carregando, handleAcao } = useNomeFerramenta();
+
+  return (
+    <div className="ferramenta">
+      <BorderBeam size={80} duration={8} colorFrom="#8c52ff" colorTo="#a855f7" borderWidth={1} />
+      <SecaoA estado={estado} onAcao={handleAcao} />
+      <SecaoB carregando={carregando} />
+    </div>
+  );
+}
+```
+
+### Padrão de Hook Customizado
+```tsx
+// useNomeFerramenta.ts
+import { useState } from "react";
+import { invoke } from "@tauri-apps/api/core";
+
+export function useNomeFerramenta() {
   const [estado, setEstado] = useState("");
   const [carregando, setCarregando] = useState(false);
 
@@ -92,10 +180,25 @@ function NomeFerramenta() {
     }
   }
 
+  return { estado, carregando, handleAcao };
+}
+```
+
+### Padrão de Subcomponente
+```tsx
+// components/SecaoA.tsx
+import { SomeIcon } from "lucide-react";
+
+interface SecaoAProps {
+  estado: string;
+  onAcao: () => void;
+}
+
+export function SecaoA({ estado, onAcao }: SecaoAProps) {
   return (
-    <div className="ferramenta">
-      <BorderBeam /* props padrão */ />
-      {/* Conteúdo */}
+    <div className="secao-a">
+      <SomeIcon size={20} />
+      {/* conteúdo */}
     </div>
   );
 }

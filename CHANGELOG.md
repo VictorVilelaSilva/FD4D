@@ -5,6 +5,26 @@ Todas as mudanças notáveis deste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Semantic Versioning](https://semver.org/lang/pt-BR/).
 
+## [3.3.0] - 2026-05-12
+
+### Adicionado
+- **CNPJ Alfanumérico (IN RFB 2.229/2024)**: Suporte completo ao novo formato de CNPJ alfanumérico que entra em vigor no Brasil
+  - Geração de CNPJ alfanumérico opcional via toggle no card de CNPJ
+  - Validação aceita ambos os formatos (numérico clássico e alfanumérico)
+  - Algoritmo de DV usa `ord(char) - 48` conforme especificação da Receita Federal
+- **Documentos unificado com abas estilo navegador**: CPF e CNPJ agora compartilham um único card com abas Gerar/Validar
+  - Aba ativa com curva côncava nos cantos inferiores (estilo Chrome)
+  - Transição suave entre modos de geração e validação no mesmo card
+  - Dock consolidado com uma única entrada "Documentos (CPF/CNPJ)"
+- **Toggles modernos**: Substituição de checkboxes por toggles animados com gradiente roxo
+  - Animação elástica do thumb
+  - Estados de foco visível para acessibilidade via teclado
+
+### Melhorado
+- **Reorganização de pastas**: Movido `src/components/{Tool}/` para `src/tools/{Tool}/` para melhor separação entre componentes reutilizáveis e ferramentas
+- **Hook `useGerador`**: Encapsula estado e ações do gerador, com suporte a flag alfanumérica
+- **Backend Rust**: Helper `cnpj_char_value` e função `cnpj_dv` reutilizável; `gerar_cnpj` agora aceita parâmetro `alfanumerico`
+
 ## [3.1.0] - 2026-02-14
 
 ### Adicionado

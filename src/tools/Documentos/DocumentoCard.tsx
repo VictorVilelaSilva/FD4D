@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { BorderBeam } from "../ui/border-beam";
-import { ShimmerButton } from "../ui/shimmer-button";
-import { TypingAnimation } from "../ui/typing-animation";
+import { BorderBeam } from "../../components/ui/border-beam";
+import { ShimmerButton } from "../../components/ui/shimmer-button";
+import { TypingAnimation } from "../../components/ui/typing-animation";
 import {
     gerarCpf,
     gerarCnpj,
     copiarParaClipboard,
 } from "../CPFGenerator/gerador";
 import { adicionarAoHistorico } from "../CPFGenerator/historico";
-import HistoricoModal from "../CPFGenerator/HistoricoModal";
+import HistoricoModal from "../CPFGenerator/components/HistoricoModal";
 import {
     type ResultadoValidacao,
     formatarCpfInput,
