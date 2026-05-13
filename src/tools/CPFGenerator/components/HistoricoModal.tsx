@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { HistoricoItem, formatarTimestamp, limparHistorico, obterHistorico } from "../historico";
 import { copiarParaClipboard } from "../gerador";
 import { Copy, CopyCheck, Shredder, X } from "lucide-react";
@@ -39,7 +40,7 @@ function HistoricoModal({ tipo, aberto, onFechar }: HistoricoModalProps) {
 
     if (!aberto) return null;
 
-    return (
+    return createPortal(
         <div className="historico-overlay" onClick={onFechar}>
             <div className="historico-modal" onClick={(e) => e.stopPropagation()}>
                 <div className="historico-header">
@@ -80,7 +81,8 @@ function HistoricoModal({ tipo, aberto, onFechar }: HistoricoModalProps) {
                     </>
                 )}
             </div>
-        </div>
+        </div>,
+        document.body
     );
 }
 
